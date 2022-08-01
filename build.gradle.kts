@@ -14,7 +14,9 @@ plugins {
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
+  implementation("org.jsoup:jsoup:1.15.2")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("com.google.truth:truth:1.1.3")
   testImplementation("io.mockk:mockk:1.12.4")
 }
 tasks.compileKotlin {
