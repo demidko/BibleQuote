@@ -12,4 +12,8 @@ class Bible(url: URL) {
       }
     }
   }
+
+  fun listAvailableBooks(): List<String> {
+    TODO()
+  }
 }

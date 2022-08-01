@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Bean
 class App {
 
   @Bean
-  fun textUrl() = javaClass.getResource("/bible.html")!!
+  fun sourceUrl() = javaClass.getResource("/bible.html")!!
 
-  fun bible() = Bible(textUrl())
+  fun bible() = Bible(sourceUrl())
 }
 
 fun main(args: Array<String>) {
