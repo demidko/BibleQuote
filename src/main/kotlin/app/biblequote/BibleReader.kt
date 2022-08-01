@@ -29,16 +29,13 @@ class BibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun currentText() = currentBuffer!!.wholeText()
 
-  private fun isCurrentTag(tag: String): Boolean {
-    return currentBuffer!!.body().firstElementChild()!!.tagName() == tag
-  }
+  private fun isCurrentTag(tag: String) = currentBuffer!!.body().firstElementChild()!!.tagName() == tag
 
   private val isNewBook get() = isCurrentTag("h3")
 
   private fun loadNewBook(): Verse {
     ++bookNumber
     chapterNumber = 0
-    verseNumber = 0
     bookName = currentText()
     reloadBuffer()
     return loadNewChapter()
@@ -48,6 +45,7 @@ class BibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun loadNewChapter(): Verse {
     ++chapterNumber
+    verseNumber = 0
     reloadBuffer()
     return loadNewVerse()
   }

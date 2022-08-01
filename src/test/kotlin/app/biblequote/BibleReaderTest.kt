@@ -20,8 +20,7 @@ internal class BibleReaderTest {
   }
 
   @Test
-  fun test() {
-    assertThat(reader.hasNext).isTrue()
+  fun allBooksShouldBeCorrectlyLoaded() {
     assertThat(reader.nextVerse()).isEqualTo(
       Verse(
         "Бытие",
@@ -39,8 +38,8 @@ internal class BibleReaderTest {
       Verse(
         "Откровение",
         66,
-        1,
-        1,
+        22,
+        21,
         "Благодать Господа нашего Иисуса Христа со всеми вами. Аминь."
       )
     )
