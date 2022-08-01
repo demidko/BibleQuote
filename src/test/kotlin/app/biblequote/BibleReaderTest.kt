@@ -28,7 +28,20 @@ internal class BibleReaderTest {
         1,
         1,
         1,
-        "В начале сотворил  Бог небо и землю."
+        "В начале сотворил Бог небо и землю."
+      )
+    )
+    lateinit var lastVerse: Verse
+    while (reader.hasNext) {
+      lastVerse = reader.nextVerse()
+    }
+    assertThat(lastVerse).isEqualTo(
+      Verse(
+        "Откровение",
+        66,
+        1,
+        1,
+        "Благодать Господа нашего Иисуса Христа со всеми вами. Аминь."
       )
     )
   }
