@@ -23,5 +23,19 @@ class Bible(url: URL) {
     TODO()
   }
 
-  fun lo
+  fun getBookName(bookNumber: Int): String {
+    TODO()
+  }
+
+  fun getBookNumber(bookName: String): Int {
+    TODO()
+  }
+
+  fun getChaptersCount(bookName: String): Int {
+    TODO()
+  }
+
+  fun getChaptersCount(bookNumber: Int): Int {
+    TODO()
+  }
 }
