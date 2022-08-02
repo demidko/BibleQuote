@@ -5,7 +5,7 @@ import java.net.URL
 
 
 @Suppress("MemberVisibilityCanBePrivate")
-class Bible(url: URL) {
+class RandomAccessBible(url: URL) {
 
   /**
    * Каждой книге соответствует список глав, где каждая глава состоит из списка стихов.

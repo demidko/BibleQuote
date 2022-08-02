@@ -56,7 +56,6 @@ class BibleReader(private val reader: BufferedReader) : Closeable {
     return Verse(bookName, chapterNumber, verseNumber, verseBodyText)
   }
 
-
   fun nextVerse() = when {
     isNewBook -> loadNewBook()
     isNewChapter -> loadNewChapter()

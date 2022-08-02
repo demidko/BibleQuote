@@ -3,14 +3,14 @@ package app.biblequote
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
-internal class BibleTest {
+internal class RandomAccessBibleTest {
 
-  private val bible = javaClass.getResource("/bible.html")!!.let(::Bible)
+  private val randomAccessBible = javaClass.getResource("/bible.html")!!.let(::RandomAccessBible)
 
   @Test
   fun versesShouldBeCorrectlyLoaded() {
     assertThat(
-      bible.verseText(
+      randomAccessBible.verseText(
         "Откровение",
         13,
         10
@@ -21,7 +21,7 @@ internal class BibleTest {
         "Здесь терпение и вера святых."
     )
     assertThat(
-      bible.verseText(
+      randomAccessBible.verseText(
         "Исаия",
         65,
         12
