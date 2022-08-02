@@ -9,7 +9,6 @@ import java.io.Closeable
 class BibleReader(private val reader: BufferedReader) : Closeable {
 
   private var bookName = "?"
-  private var bookNumber = 0
   private var chapterNumber = 0
   private var verseNumber = 0
   private var currentBuffer = null as Document?
@@ -34,7 +33,6 @@ class BibleReader(private val reader: BufferedReader) : Closeable {
   private val isNewBook get() = isCurrentTag("h3")
 
   private fun loadNewBook(): Verse {
-    ++bookNumber
     chapterNumber = 0
     bookName = currentText()
     reloadBuffer()
@@ -55,7 +53,7 @@ class BibleReader(private val reader: BufferedReader) : Closeable {
     val verseNumberText = verseNumber.toString()
     val verseBodyText = currentText().substringAfter(verseNumberText)
     reloadBuffer()
-    return Verse(bookName, bookNumber, chapterNumber, verseNumber, verseBodyText)
+    return Verse(bookName, chapterNumber, verseNumber, verseBodyText)
   }
 
 

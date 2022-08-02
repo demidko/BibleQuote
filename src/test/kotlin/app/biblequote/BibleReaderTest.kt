@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 internal class BibleReaderTest {
 
-  lateinit var reader: BibleReader
+  private lateinit var reader: BibleReader
 
   @BeforeEach
   fun init() {
@@ -21,10 +21,11 @@ internal class BibleReaderTest {
 
   @Test
   fun allBooksShouldBeCorrectlyLoaded() {
-    assertThat(reader.nextVerse()).isEqualTo(
+    assertThat(reader.hasNext).isTrue()
+    val firstVerse = reader.nextVerse()
+    assertThat(firstVerse).isEqualTo(
       Verse(
         "Бытие",
-        1,
         1,
         1,
         "В начале сотворил Бог небо и землю."
@@ -37,7 +38,6 @@ internal class BibleReaderTest {
     assertThat(lastVerse).isEqualTo(
       Verse(
         "Откровение",
-        66,
         22,
         21,
         "Благодать Господа нашего Иисуса Христа со всеми вами. Аминь."
