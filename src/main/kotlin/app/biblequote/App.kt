@@ -10,7 +10,11 @@ class App {
   @Bean
   fun sourceUrl() = javaClass.getResource("/bible.html")!!
 
-  fun bible() = RandomAccessBible(sourceUrl())
+  @Bean
+  fun randomAccessBible() = RandomAccessBible(sourceUrl())
+
+  @Bean
+  fun bibleSearch() = BibleSearch(randomAccessBible())
 }
 
 fun main(args: Array<String>) {
