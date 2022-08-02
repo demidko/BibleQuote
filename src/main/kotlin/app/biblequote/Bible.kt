@@ -1,5 +1,6 @@
 package app.biblequote
 
+import org.slf4j.LoggerFactory
 import java.net.URL
 
 
@@ -33,6 +34,7 @@ class Bible(url: URL) {
         }
       }
     }
+    LoggerFactory.getLogger("Bible").info("all books loaded.")
   }
 
   val booksNames get() = booksToChapters.keys.toSet()
