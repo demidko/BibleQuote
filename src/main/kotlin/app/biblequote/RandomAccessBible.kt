@@ -1,5 +1,7 @@
 package app.biblequote
 
+import com.github.demidko.bits.BitReader
+import com.github.demidko.bits.BitWriter
 import org.slf4j.LoggerFactory
 import java.net.URL
 
@@ -42,48 +44,77 @@ class RandomAccessBible(url: URL) {
   val booksCount get() = booksToChapters.size
 
   /**
-   * @param number порядковый номер книги, начиная с `1`
+   * @param book порядковый номер книги, начиная с `1`
    */
-  fun bookName(number: Int) = booksToChapters.keys.elementAt(number - 1)
+  fun nameOf(book: Int) = booksToChapters.keys.elementAt(book - 1)
 
   /**
-   * @return  порядковый номер книги, начиная с `1`
+   * @return порядковый номер книги, начиная с `1`
    */
-  fun bookNumber(name: String) = booksToChapters.keys.indexOf(name) + 1
-
-  fun chaptersCount(bookName: String) = booksToChapters[bookName]!!.size
-
-  /**
-   * @param bookNumber порядковый номер книги, начиная с `1`
-   */
-  fun chaptersCount(bookNumber: Int) = chaptersCount(bookName(bookNumber))
-
-  /**
-   * @param chapterNumber порядковый номер главы, начиная с `1`
-   */
-  fun versesCount(bookName: String, chapterNumber: Int) = booksToChapters[bookName]!![chapterNumber - 1].size
-
-  /**
-   * @param bookNumber порядковый номер книги, начиная с `1`
-   * @param chapterNumber порядковый номер главы, начиная с `1`
-   */
-  fun versesCount(bookNumber: Int, chapterNumber: Int) = versesCount(bookName(bookNumber), chapterNumber)
-
-  /**
-   * @param chapterNumber порядковый номер главы, начиная с `1`
-   * @param verseNumber порядковый номер стиха, начиная с `1`
-   */
-  fun verseText(bookName: String, chapterNumber: Int, verseNumber: Int): String {
-    return booksToChapters[bookName]!![chapterNumber - 1][verseNumber - 1]
+  fun numberOf(book: String): Int {
+    val idx = booksToChapters.keys.indexOf(book)
+    check(idx >= 0) {
+      "Не найдена книга '$book'"
+    }
+    return idx + 1
   }
 
   /**
-   * @param bookNumber порядковый номер книги, начиная с `1`
-   * @param chapterNumber порядковый номер главы, начиная с `1`
-   * @param verseNumber порядковый номер стиха, начиная с `1`
+   * @param book название книги
    */
-  fun verseText(bookNumber: Int, chapterNumber: Int, verseNumber: Int): String {
-    return verseText(bookName(bookNumber), chapterNumber, verseNumber)
+  fun chaptersCount(book: String) = booksToChapters[book]!!.size
+
+  /**
+   * @param book порядковый номер книги, начиная с `1`
+   */
+  fun chaptersCount(book: Int) = chaptersCount(nameOf(book))
+
+  /**
+   * @param chapter порядковый номер главы, начиная с `1`
+   */
+  fun versesCount(book: String, chapter: Int) = booksToChapters[book]!![chapter - 1].size
+
+  /**
+   * @param book порядковый номер книги, начиная с `1`
+   * @param chapter порядковый номер главы, начиная с `1`
+   */
+  fun versesCount(book: Int, chapter: Int) = versesCount(nameOf(book), chapter)
+
+  /**
+   * @param chapter порядковый номер главы, начиная с `1`
+   * @param verse порядковый номер стиха, начиная с `1`
+   */
+  fun text(book: String, chapter: Int, verse: Int): String {
+    return booksToChapters[book]!![chapter - 1][verse - 1]
+  }
+
+  /**
+   * @param book порядковый номер книги, начиная с `1`
+   * @param chapter порядковый номер главы, начиная с `1`
+   * @param verse порядковый номер стиха, начиная с `1`
+   */
+  fun text(book: Int, chapter: Int, verse: Int): String {
+    return text(nameOf(book), chapter, verse)
+  }
+
+  /**
+   * @return идентификатор стиха в виде [Long], в котором значимы первые 48 бит.
+   */
+  fun id(book: Int, chapter: Int, verse: Int) =
+    BitWriter()
+      .writeShort(book.toShort())
+      .writeShort(chapter.toShort())
+      .writeShort(verse.toShort())
+      .toLong()
+
+  fun id(book: String, chapter: Int, verse: Int) = id(numberOf(book), chapter, verse)
+
+  fun text(id: Long): String {
+    val reader = BitReader(id)
+    val book = reader.readShort()
+    val chapter = reader.readShort()
+    val verse = reader.readShort()
+    return text(book.toInt(), chapter.toInt(), verse.toInt())
   }
 
   /**
@@ -91,7 +122,7 @@ class RandomAccessBible(url: URL) {
    */
   fun chapterText(bookName: String, chapterNumber: Int) = buildString {
     for (verseNumber in 1..versesCount(bookName, chapterNumber)) {
-      append(verseText(bookName, chapterNumber, verseNumber))
+      append(text(bookName, chapterNumber, verseNumber))
     }
   }
 
@@ -99,5 +130,5 @@ class RandomAccessBible(url: URL) {
    * @param bookNumber порядковый номер книги, начиная с `1`
    * @param chapterNumber порядковый номер главы, начиная с `1`
    */
-  fun chapterText(bookNumber: Int, chapterNumber: Int) = chapterText(bookName(bookNumber), chapterNumber)
+  fun chapterText(bookNumber: Int, chapterNumber: Int) = chapterText(nameOf(bookNumber), chapterNumber)
 }

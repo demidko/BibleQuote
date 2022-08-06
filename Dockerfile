@@ -3,7 +3,7 @@ WORKDIR /project
 COPY src ./src
 COPY build.gradle.kts ./build.gradle.kts
 COPY settings.gradle.kts ./settings.gradle.kts
-RUN gradle clean build
+RUN gradle --scan clean build
 
 FROM openjdk as backend
 WORKDIR /root
