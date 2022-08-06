@@ -120,7 +120,7 @@ class RandomAccessBible(url: URL) {
   /**
    * @param chapterNumber порядковый номер главы, начиная с `1`
    */
-  fun chapterText(bookName: String, chapterNumber: Int) = buildString {
+  fun text(bookName: String, chapterNumber: Int) = buildString {
     for (verseNumber in 1..versesCount(bookName, chapterNumber)) {
       append(text(bookName, chapterNumber, verseNumber))
     }
@@ -130,5 +130,5 @@ class RandomAccessBible(url: URL) {
    * @param bookNumber порядковый номер книги, начиная с `1`
    * @param chapterNumber порядковый номер главы, начиная с `1`
    */
-  fun chapterText(bookNumber: Int, chapterNumber: Int) = chapterText(nameOf(bookNumber), chapterNumber)
+  fun text(bookNumber: Int, chapterNumber: Int) = text(nameOf(bookNumber), chapterNumber)
 }
