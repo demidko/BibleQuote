@@ -1,8 +1,6 @@
 package app.biblequote
 
-import com.github.demidko.bits.BitReader
-import com.github.demidko.bits.BitWriter
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory.getLogger
 import java.net.URL
 
 
@@ -20,23 +18,23 @@ class RandomAccessBible(url: URL) {
     reader.use {
       while (reader.hasNext) {
         reader.nextVerse().apply {
-          val bookChapters = booksToChapters.computeIfAbsent(bookName) { mutableListOf() }
-          if (verseNumber == 1) {
+          val bookChapters = booksToChapters.computeIfAbsent(book) { mutableListOf() }
+          if (number == 1) {
             // если это первый стих, значит предыдущих глав должно быть на одну меньше
-            check(bookChapters.size == chapterNumber - 1)
-            bookChapters.add(mutableListOf(verseText))
+            check(bookChapters.size == chapter - 1)
+            bookChapters.add(mutableListOf(text))
           } else {
             // если это не первый стих, значит глава уже должна быть в списке
-            check(bookChapters.size == chapterNumber)
-            val lastChapter = bookChapters[chapterNumber - 1]
+            check(bookChapters.size == chapter)
+            val lastChapter = bookChapters[chapter - 1]
             // и при этом предыдущих стихов в ней должно быть на один меньше
-            check(lastChapter.size == verseNumber - 1)
-            lastChapter.add(verseText)
+            check(lastChapter.size == number - 1)
+            lastChapter.add(text)
           }
         }
       }
     }
-    LoggerFactory.getLogger("Bible").info("all books loaded.")
+    getLogger(javaClass.simpleName).info("all books loaded.")
   }
 
   val booksNames get() = booksToChapters.keys.toSet()
@@ -95,26 +93,6 @@ class RandomAccessBible(url: URL) {
    */
   fun text(book: Int, chapter: Int, verse: Int): String {
     return text(nameOf(book), chapter, verse)
-  }
-
-  /**
-   * @return идентификатор стиха в виде [Long], в котором значимы первые 48 бит.
-   */
-  fun id(book: Int, chapter: Int, verse: Int) =
-    BitWriter()
-      .writeShort(book.toShort())
-      .writeShort(chapter.toShort())
-      .writeShort(verse.toShort())
-      .toLong()
-
-  fun id(book: String, chapter: Int, verse: Int) = id(numberOf(book), chapter, verse)
-
-  fun text(id: Long): String {
-    val reader = BitReader(id)
-    val book = reader.readShort()
-    val chapter = reader.readShort()
-    val verse = reader.readShort()
-    return text(book.toInt(), chapter.toInt(), verse.toInt())
   }
 
   /**

@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.Closeable
+import java.net.URL
 
 class BibleReader(private val reader: BufferedReader) : Closeable {
 

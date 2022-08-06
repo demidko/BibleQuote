@@ -119,7 +119,7 @@ internal class RandomAccessBibleTest {
 
   @Test
   fun `Убеждаемся, что идентификаторы стихов срабатывают как надо`() {
-    val id = bible.id("Иеремия", 23, 11)
+    val id = bible.zipVerse("Иеремия", 23, 11)
     assertThat(bible.text(id)).isEqualTo(
       "ибо и пророк и священник - лицемеры; даже в доме Моем Я нашел нечестие их, говорит Господь."
     )
