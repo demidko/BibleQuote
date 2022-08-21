@@ -1,20 +1,19 @@
 package app.biblequote
 
+import app.biblequote.TestConstants.bible
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 @Suppress("NonAsciiCharacters")
-internal class RandomAccessBibleTest {
-
-  private val bible = javaClass.getResource("/bible.html")!!.let(::RandomAccessBible)
+internal class BibleTest {
 
   @Test
   fun `Проверяем что стихи внутри книг загружены в правильном порядке`() {
     assertThat(
       bible.text(
         "Откровение",
-        13,
-        10
+        13u,
+        10u
       )
     ).isEqualTo(
       "Кто ведет в плен, тот сам пойдет в плен; " +
@@ -24,8 +23,8 @@ internal class RandomAccessBibleTest {
     assertThat(
       bible.text(
         "Исаия",
-        65,
-        12
+        65u,
+        12u
       )
     ).isEqualTo(
       "вас обрекаю Я мечу, и все вы преклонитесь на заклание: " +
@@ -114,14 +113,6 @@ internal class RandomAccessBibleTest {
       "Откровение"
     )
 
-    assertThat((1..66).map(bible::nameOf)).isEqualTo(expectedBooksOrder)
-  }
-
-  @Test
-  fun `Убеждаемся, что идентификаторы стихов срабатывают как надо`() {
-    val id = bible.zipVerse("Иеремия", 23, 11)
-    assertThat(bible.text(id)).isEqualTo(
-      "ибо и пророк и священник - лицемеры; даже в доме Моем Я нашел нечестие их, говорит Господь."
-    )
+    assertThat((1..66).map(Int::toUShort).map(bible::nameOf)).isEqualTo(expectedBooksOrder)
   }
 }

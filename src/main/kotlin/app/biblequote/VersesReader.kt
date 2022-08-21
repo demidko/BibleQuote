@@ -2,16 +2,17 @@ package app.biblequote
 
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
-import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.Closeable
-import java.net.URL
 
-class BibleReader(private val reader: BufferedReader) : Closeable {
+/**
+ * Класс для чтения Библии стих за стихом.
+ */
+class VersesReader(private val reader: BufferedReader) : Closeable {
 
   private var bookName = "?"
-  private var chapterNumber = 0
-  private var verseNumber = 0
+  private var chapterNumber: UShort = 0u
+  private var verseNumber: UShort = 0u
   private var currentBuffer = null as Document?
 
   init {
@@ -34,7 +35,7 @@ class BibleReader(private val reader: BufferedReader) : Closeable {
   private val isNewBook get() = isCurrentTag("h3")
 
   private fun loadNewBook(): Verse {
-    chapterNumber = 0
+    chapterNumber = 0u
     bookName = currentText()
     reloadBuffer()
     return loadNewChapter()
@@ -44,7 +45,7 @@ class BibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun loadNewChapter(): Verse {
     ++chapterNumber
-    verseNumber = 0
+    verseNumber = 0u
     reloadBuffer()
     return loadNewVerse()
   }

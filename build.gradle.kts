@@ -29,6 +29,8 @@ tasks.compileTestKotlin {
   kotlinOptions.freeCompilerArgs += listOf("-opt-in=kotlin.time.ExperimentalTime", "-Xjsr305=strict")
 }
 tasks.test {
+  minHeapSize = "1024m"
+  maxHeapSize = "2048m"
   useJUnitPlatform()
 }
 tasks.bootJar {

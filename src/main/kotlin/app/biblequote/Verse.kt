@@ -4,28 +4,24 @@ import com.github.demidko.bits.BitReader
 import com.github.demidko.bits.BitWriter
 
 /**
- * Нумерация всех числовых свойств в этом объекте начинается с `1`
+ * Один стих из Библии. Нумерация всех числовых свойств в этом объекте начинается с `1`
  */
-data class Verse(
-  val book: String,
-  val chapter: Int,
-  val number: Int,
-  val text: String
-) {
-  fun zip() =
+data class Verse(val book: String, val chapter: UShort, val number: UShort, val text: String) {
+
+  fun encode(with: Bible) =
     BitWriter()
-      .writeShort(book.toShort())
+      .writeShort(with.numberOf(book).toShort())
       .writeShort(chapter.toShort())
       .writeShort(number.toShort())
       .toLong()
 
   companion object {
-    fun unzip(bible: RandomAccessBible, id: Long): Verse {
-      val reader = BitReader(id)
-      val book = reader.readShort().toInt().let(bible::nameOf)
-      val chapter = reader.readShort().toInt()
-      val verse = reader.readShort().toInt()
-      val text = bible.text(book, chapter, verse)
+    fun decode(encoded: Long, with: Bible): Verse {
+      val reader = BitReader(encoded)
+      val book = reader.readShort().toUShort().let(with::nameOf)
+      val chapter = reader.readShort().toUShort()
+      val verse = reader.readShort().toUShort()
+      val text = with.text(book, chapter, verse)
       return Verse(book, chapter, verse, text)
     }
   }

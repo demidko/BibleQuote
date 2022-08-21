@@ -5,13 +5,13 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class BibleReaderTest {
+internal class VersesReaderTest {
 
-  private lateinit var reader: BibleReader
+  private lateinit var reader: VersesReader
 
   @BeforeEach
   fun init() {
-    reader = javaClass.getResourceAsStream("/bible.html")!!.bufferedReader().let(::BibleReader)
+    reader = javaClass.getResourceAsStream("/bible.html")!!.bufferedReader().let(::VersesReader)
   }
 
   @AfterEach
@@ -26,8 +26,8 @@ internal class BibleReaderTest {
     assertThat(firstVerse).isEqualTo(
       Verse(
         "Бытие",
-        1,
-        1,
+        1u,
+        1u,
         "В начале сотворил Бог небо и землю."
       )
     )
@@ -38,8 +38,8 @@ internal class BibleReaderTest {
     assertThat(lastVerse).isEqualTo(
       Verse(
         "Откровение",
-        22,
-        21,
+        22u,
+        21u,
         "Благодать Господа нашего Иисуса Христа со всеми вами. Аминь."
       )
     )
