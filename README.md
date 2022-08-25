@@ -34,8 +34,8 @@
 Синодальный перевод НЗ сделан с греческого
 текста [Textus Receptus 1516 г.](https://ru.wikipedia.org/wiki/Textus_Receptus)
 издания [Реформатской Церкви](https://en.wikipedia.org/wiki/Calvinism), которое базируется на списках
-с [Синайского Кодекса IV века н. э.](https://ru.wikipedia.org/wiki/Синайский_кодекс), который в свою очередь является
-копией рукописей первых четырех евангелистов (две тысячи лет назад).
+с [Синайского Кодекса IV века н. э.](https://ru.wikipedia.org/wiki/Синайский_кодекс), копии рукописей первых четырех
+евангелистов (две тысячи лет назад).
 
 ## Оригинальные тексты
 
@@ -58,10 +58,9 @@
 
 ## Похожие приложения
 
-1. [BibleQuote 6](https://github.com/YakushevVladimir/biblequote) — первая цитата с которой все начиналось (для Windows)
-   .
+1. [BibleQuote 6](https://github.com/YakushevVladimir/biblequote) — первая цитата с которой все начиналось.
    Может расширяться модулями морфологии, апокрифов, комментариев, богословских документов, альтернативных переводов и
-   т. п. Искать их приходится по всему интернету.
+   т. п. Искать их приходится по всему интернету. Поддерживается только Windows.
 2. [BibleQuote for Android](https://github.com/YakushevVladimir/BibleQuote-for-Android) — актуальное продолжение
    BibleQuote для Android, также расширяется с помощью подгружаемых модулей.
 3. [BibleQuote 7](https://github.com/BibleQuote/BibleQuote) — новая Windows версия от других разработчиков. Есть

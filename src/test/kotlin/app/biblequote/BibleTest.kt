@@ -1,6 +1,5 @@
 package app.biblequote
 
-import app.biblequote.TestConstants.bible
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,7 +9,7 @@ internal class BibleTest {
   @Test
   fun `Проверяем что стихи внутри книг загружены в правильном порядке`() {
     assertThat(
-      bible.text(
+      Bible.text(
         "Откровение",
         13u,
         10u
@@ -21,7 +20,7 @@ internal class BibleTest {
         "Здесь терпение и вера святых."
     )
     assertThat(
-      bible.text(
+      Bible.text(
         "Исаия",
         65u,
         12u
@@ -113,6 +112,6 @@ internal class BibleTest {
       "Откровение"
     )
 
-    assertThat((1..66).map(Int::toUShort).map(bible::nameOf)).isEqualTo(expectedBooksOrder)
+    assertThat((1..66).map(Int::toUShort).map(Bible::nameOf)).isEqualTo(expectedBooksOrder)
   }
 }

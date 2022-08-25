@@ -1,17 +1,18 @@
-package app.biblequote
+package app.biblequote.utils
 
+import app.biblequote.Verse
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class VersesReaderTest {
+internal class BibleReaderTest {
 
-  private lateinit var reader: VersesReader
+  private lateinit var reader: BibleReader
 
   @BeforeEach
   fun init() {
-    reader = javaClass.getResourceAsStream("/bible.html")!!.bufferedReader().let(::VersesReader)
+    reader = javaClass.getResourceAsStream("/bible.html")!!.bufferedReader().let(::BibleReader)
   }
 
   @AfterEach

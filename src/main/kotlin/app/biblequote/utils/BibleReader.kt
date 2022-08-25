@@ -1,14 +1,26 @@
-package app.biblequote
+package app.biblequote.utils
 
+import app.biblequote.Verse
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
 import java.io.BufferedReader
 import java.io.Closeable
+import java.io.Reader
 
 /**
- * Класс для чтения Библии стих за стихом.
+ * Класс для чтения Библии из html стих за стихом.
+ * @param reader формат текста должен быть таким:
+ * ```
+ *  <h3>Книга</h3>
+ *  <h4>Глава</h4>
+ *  <p><sup>Номер стиха, например 1</sup> собственно текст стиха 1`
+ *  <p><sup>Номер стиха, например 2</sup> собственно текст стиха 2`
+ *  И так далее для всех последующих глав и стихов
+ * ```
+ * Текст может состоять из нескольких и более книг.
+ * Главы и стихи в книгах следуют друг за другом в порядке возврастания.
  */
-class VersesReader(private val reader: BufferedReader) : Closeable {
+class BibleReader(private val reader: BufferedReader) : Closeable {
 
   private var bookName = "?"
   private var chapterNumber: UShort = 0u

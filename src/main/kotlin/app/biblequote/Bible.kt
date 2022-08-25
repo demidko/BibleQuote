@@ -1,19 +1,16 @@
 package app.biblequote
 
-import com.github.demidko.aot.WordformMeaning
-import java.net.URL
+import app.biblequote.utils.BibleReader
 
 /**
- * Библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
+ * Русская синодальная библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
  */
-class Bible(url: URL) {
+object Bible {
 
   private val booksToChapters = mutableMapOf<String, MutableList<MutableList<String>>>()
 
-  private val lemmasToVerses = mutableMapOf<Long, MutableSet<Long>>()
-
   init {
-    val reader = url.openStream().bufferedReader().let(::VersesReader)
+    val reader = javaClass.getResourceAsStream("/bible.html")!!.bufferedReader().let(::BibleReader)
     reader.use {
       while (reader.hasNext) {
         add(reader.nextVerse())
@@ -41,17 +38,6 @@ class Bible(url: URL) {
       // и при этом предыдущих стихов в ней должно быть на один меньше
       check(lastChapter.size == number - 1)
       lastChapter.add(text)
-    }
-    val lemmas =
-      text.split(' ')
-        .filter(String::isNotBlank)
-        .flatMap(WordformMeaning::lookupForMeanings)
-        .map(WordformMeaning::getLemma)
-        .map(WordformMeaning::getId)
-        .toSet()
-    val id = verse.encode(this)
-    for (lemma in lemmas) {
-      lemmasToVerses.computeIfAbsent(lemma, ::mutableSetOf).add(id)
     }
   }
 

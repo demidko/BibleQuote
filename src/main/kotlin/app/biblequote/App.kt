@@ -6,11 +6,6 @@ import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 class App {
-  @Bean
-  fun bible(): Bible {
-    val url = javaClass.getResource("/bible.html")!!
-    return Bible(url)
-  }
 }
 
 fun main(args: Array<String>) {
