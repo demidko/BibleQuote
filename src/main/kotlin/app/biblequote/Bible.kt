@@ -1,16 +1,28 @@
 package app.biblequote
 
-import app.biblequote.utils.BibleReader
+import app.biblequote.utils.HtmlBibleReader
+import app.biblequote.utils.Verse
+import java.net.URL
 
 /**
- * Русская синодальная библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
+ * Библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
+ * @param url адрес по которому доступен текст Библии в HTML. Формат текста должен быть таким:
+ * ```
+ *  <h3>Книга</h3>
+ *  <h4>Номер главы</h4>
+ *  <p><sup>1</sup> собственно текст стиха 1
+ *  <p><sup>2</sup> собственно текст стиха 2
+ *  И так далее для всех последующих глав и стихов
+ * ```
+ * Текст может состоять из нескольких и более книг.
+ * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
  */
-object Bible {
+class Bible(url: URL) {
 
   private val booksToChapters = mutableMapOf<String, MutableList<MutableList<String>>>()
 
   init {
-    val reader = javaClass.getResourceAsStream("/bible.html")!!.bufferedReader().let(::BibleReader)
+    val reader = url.openStream()!!.bufferedReader().let(::HtmlBibleReader)
     reader.use {
       while (reader.hasNext) {
         add(reader.nextVerse())

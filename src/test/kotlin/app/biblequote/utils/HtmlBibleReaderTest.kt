@@ -1,22 +1,24 @@
 package app.biblequote.utils
 
-import app.biblequote.Verse
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
-internal class BibleReaderTest {
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+internal object HtmlBibleReaderTest {
 
-  private lateinit var reader: BibleReader
+  private lateinit var reader: HtmlBibleReader
 
-  @BeforeEach
-  fun init() {
-    reader = javaClass.getResourceAsStream("/bible.html")!!.bufferedReader().let(::BibleReader)
+  @JvmStatic
+  @BeforeAll
+  fun init(): Unit {
+    reader = javaClass.getResourceAsStream("/bible/rst.html").bufferedReader().let(::HtmlBibleReader)
   }
 
-  @AfterEach
-  fun close() {
+  @JvmStatic
+  @AfterAll
+  fun close(): Unit {
     reader.close()
   }
 

@@ -1,15 +1,18 @@
 package app.biblequote
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 
-@Suppress("NonAsciiCharacters")
+@Suppress("NonAsciiCharacters", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal class BibleTest {
+
+  private val bible = javaClass.getResource("/bible/rst.html").let(::Bible)
 
   @Test
   fun `Проверяем что стихи внутри книг загружены в правильном порядке`() {
     assertThat(
-      Bible.text(
+      bible.text(
         "Откровение",
         13u,
         10u
@@ -20,7 +23,7 @@ internal class BibleTest {
         "Здесь терпение и вера святых."
     )
     assertThat(
-      Bible.text(
+      bible.text(
         "Исаия",
         65u,
         12u
@@ -112,6 +115,6 @@ internal class BibleTest {
       "Откровение"
     )
 
-    assertThat((1..66).map(Int::toUShort).map(Bible::nameOf)).isEqualTo(expectedBooksOrder)
+    assertThat((1..66).map(Int::toUShort).map(bible::nameOf)).isEqualTo(expectedBooksOrder)
   }
 }

@@ -3,6 +3,6 @@ package app.biblequote
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class Api {
+class Api(private val rst: Bible) {
 
 }
