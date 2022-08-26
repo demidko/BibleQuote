@@ -12,6 +12,13 @@ class App {
   fun russianSynodalTranslation(): Bible {
     return javaClass.getResource("/bible/rst.html").let(::Bible)
   }
+
+  @Bean
+  fun translations(): Map<String, Bible> {
+    return mapOf(
+      "rst" to russianSynodalTranslation()
+    )
+  }
 }
 
 fun main(args: Array<String>) {
