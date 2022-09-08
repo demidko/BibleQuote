@@ -14,7 +14,7 @@ plugins {
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
-  implementation("org.jsoup:jsoup:1.15.2")
+  implementation("org.jsoup:jsoup:1.15.3")
   implementation("com.github.demidko:aot:2022.08.06")
   implementation("org.apache.lucene:lucene-queryparser:9.3.0")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
