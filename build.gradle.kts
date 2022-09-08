@@ -16,6 +16,7 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jsoup:jsoup:1.15.2")
   implementation("com.github.demidko:aot:2022.08.06")
+  implementation("org.apache.lucene:lucene-queryparser:9.3.0")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("com.google.truth:truth:1.1.3")
   testImplementation("io.mockk:mockk:1.12.5")

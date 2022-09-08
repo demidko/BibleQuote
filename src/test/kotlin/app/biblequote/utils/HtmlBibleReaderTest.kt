@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import java.util.zip.GZIPInputStream
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal object HtmlBibleReaderTest {
@@ -13,7 +14,11 @@ internal object HtmlBibleReaderTest {
   @JvmStatic
   @BeforeAll
   fun init(): Unit {
-    reader = javaClass.getResourceAsStream("/bible/rst.html").bufferedReader().let(::HtmlBibleReader)
+    reader =
+      javaClass.getResourceAsStream("/bible/rst.html.gz")
+        .let(::GZIPInputStream)
+        .bufferedReader()
+        .let(::HtmlBibleReader)
   }
 
   @JvmStatic

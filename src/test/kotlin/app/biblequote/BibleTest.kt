@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 @Suppress("NonAsciiCharacters", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal class BibleTest {
 
-  private val bible = javaClass.getResource("/bible/rst.html").let(::Bible)
+  private val bible = javaClass.getResource("/bible/rst.html.gz").let(::Bible)
 
   @Test
   fun `Проверяем что стихи внутри книг загружены в правильном порядке`() {

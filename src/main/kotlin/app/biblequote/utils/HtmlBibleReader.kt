@@ -17,6 +17,7 @@ import java.io.Closeable
  * ```
  * Текст может состоять из нескольких и более книг.
  * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
+ *
  */
 class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 

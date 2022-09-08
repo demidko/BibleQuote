@@ -3,10 +3,11 @@ package app.biblequote
 import app.biblequote.utils.HtmlBibleReader
 import app.biblequote.utils.Verse
 import java.net.URL
+import java.util.zip.GZIPInputStream
 
 /**
  * Библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
- * @param url адрес по которому доступен текст Библии в HTML. Формат текста должен быть таким:
+ * @param url адрес по которому доступен текст Библии в HTML пожатом в GZIP. Структура должна быть такой:
  * ```
  *  <h3>Книга</h3>
  *  <h4>Номер главы</h4>
@@ -22,7 +23,11 @@ class Bible(url: URL) {
   private val booksToChapters = mutableMapOf<String, MutableList<MutableList<String>>>()
 
   init {
-    val reader = url.openStream()!!.bufferedReader().let(::HtmlBibleReader)
+    val reader =
+      url.openStream()!!
+        .let(::GZIPInputStream)
+        .bufferedReader()
+        .let(::HtmlBibleReader)
     reader.use {
       while (reader.hasNext) {
         add(reader.nextVerse())
