@@ -60,55 +60,55 @@ class Bible(url: URL) {
 
   val booksNames get() = booksToChapters.keys.toSet()
 
-  val booksCount get() = booksToChapters.size.toUShort()
+  val booksCount get() = booksToChapters.size
 
   /**
    * @param book порядковый номер книги, начиная с `1`
    */
-  fun nameOf(book: UShort) = booksToChapters.keys.elementAt(book.toInt() - 1)
+  fun nameOf(book: Int) = booksToChapters.keys.elementAt(book - 1)
 
   /**
    * @return порядковый номер книги, начиная с `1`
    */
-  fun numberOf(book: String): UShort {
+  fun numberOf(book: String): Int {
     val idx = booksToChapters.keys.indexOf(book)
     check(idx >= 0) {
       "Не найдена книга '$book'"
     }
-    return (idx + 1).toUShort()
+    return idx + 1
   }
 
   /**
    * @param book название книги
    */
-  fun chaptersCount(book: String) = booksToChapters[book]!!.size.toUShort()
+  fun chaptersCount(book: String) = booksToChapters[book]!!.size
 
   /**
    * @param book порядковый номер книги, начиная с `1`
    */
-  fun chaptersCount(book: UShort) = chaptersCount(nameOf(book))
+  fun chaptersCount(book: Int) = chaptersCount(nameOf(book))
 
   /**
    * @param chapter порядковый номер главы, начиная с `1`
    */
-  fun versesCount(book: String, chapter: UShort): UShort {
-    val chapterIdx = (chapter - 1u).toInt()
-    return booksToChapters[book]!![chapterIdx].size.toUShort()
+  fun versesCount(book: String, chapter: Int): Int {
+    val chapterIdx = chapter - 1
+    return booksToChapters[book]!![chapterIdx].size
   }
 
   /**
    * @param book порядковый номер книги, начиная с `1`
    * @param chapter порядковый номер главы, начиная с `1`
    */
-  fun versesCount(book: UShort, chapter: UShort) = versesCount(nameOf(book), chapter)
+  fun versesCount(book: Int, chapter: Int) = versesCount(nameOf(book), chapter)
 
   /**
    * @param chapter порядковый номер главы, начиная с `1`
    * @param verse порядковый номер стиха, начиная с `1`
    */
-  fun text(book: String, chapter: UShort, verse: UShort): String {
-    val chapterIdx = (chapter - 1u).toInt()
-    val verseIdx = (verse - 1u).toInt()
+  fun text(book: String, chapter: Int, verse: Int): String {
+    val chapterIdx = chapter - 1
+    val verseIdx = verse - 1
     return booksToChapters[book]!![chapterIdx][verseIdx]
   }
 
@@ -117,17 +117,16 @@ class Bible(url: URL) {
    * @param chapter порядковый номер главы, начиная с `1`
    * @param verse порядковый номер стиха, начиная с `1`
    */
-  fun text(book: UShort, chapter: UShort, verse: UShort): String {
+  fun text(book: Int, chapter: Int, verse: Int): String {
     return text(nameOf(book), chapter, verse)
   }
 
   /**
    * @param chapterNumber порядковый номер главы, начиная с `1`
    */
-  fun text(bookName: String, chapterNumber: UShort) = buildString {
-    val versesCount = versesCount(bookName, chapterNumber).toInt()
-    for (verseIntNumber in 1..versesCount) {
-      val verseNumber = verseIntNumber.toUShort()
+  fun text(bookName: String, chapterNumber: Int) = buildString {
+    val versesCount = versesCount(bookName, chapterNumber)
+    for (verseNumber in 1..versesCount) {
       append(text(bookName, chapterNumber, verseNumber))
     }
   }
@@ -136,5 +135,5 @@ class Bible(url: URL) {
    * @param bookNumber порядковый номер книги, начиная с `1`
    * @param chapterNumber порядковый номер главы, начиная с `1`
    */
-  fun text(bookNumber: UShort, chapterNumber: UShort) = text(nameOf(bookNumber), chapterNumber)
+  fun text(bookNumber: Int, chapterNumber: Int) = text(nameOf(bookNumber), chapterNumber)
 }

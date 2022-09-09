@@ -1,8 +1,9 @@
 package app.biblequote
 
+import com.github.demidko.aot.WordformMeaning.lookupForMeanings
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
+import org.slf4j.LoggerFactory.getLogger
 
 @Suppress("NonAsciiCharacters", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal class BibleTest {
@@ -14,8 +15,8 @@ internal class BibleTest {
     assertThat(
       bible.text(
         "Откровение",
-        13u,
-        10u
+        13,
+        10
       )
     ).isEqualTo(
       "Кто ведет в плен, тот сам пойдет в плен; " +
@@ -25,8 +26,8 @@ internal class BibleTest {
     assertThat(
       bible.text(
         "Исаия",
-        65u,
-        12u
+        65,
+        12
       )
     ).isEqualTo(
       "вас обрекаю Я мечу, и все вы преклонитесь на заклание: " +
@@ -115,6 +116,51 @@ internal class BibleTest {
       "Откровение"
     )
 
-    assertThat((1..66).map(Int::toUShort).map(bible::nameOf)).isEqualTo(expectedBooksOrder)
+    assertThat((1..66).map(bible::nameOf)).isEqualTo(expectedBooksOrder)
+  }
+
+  @Test
+  fun testLemmas() {
+    /**
+     * todo
+     * Что если мы проведем лемматическую индексацию (словарь: лемма -> стих) дважды
+     * Сначала на RST, потом на современном переводе?
+     * Таким образом получим дополнительную точность для RST.
+     * Нужно узнать соотношение известных/неизвестных слов для новых переводов (50/50 для RST).
+     */
+    val lemmas = mutableSetOf<String>()
+    val unknowns = mutableSetOf<String>()
+    for (book in bible.booksNames) {
+      for (chapter in 1..bible.chaptersCount(book)) {
+        for (verse in 1..bible.versesCount(book, chapter)) {
+          val words =
+            bible.text(book, chapter, verse).split(' ').map(String::trim).map(this::clean).filter(String::isNotBlank)
+          for (w in words) {
+            val lemma = lookupForMeanings(w)
+            if (lemma.isEmpty()) {
+              unknowns.add(w)
+            } else {
+              lemmas.add(w)
+            }
+          }
+        }
+      }
+    }
+    getLogger(javaClass).warn("lemmas: ${lemmas.size}")
+    getLogger(javaClass).warn("unknowns: ${unknowns.size}")
+    getLogger(javaClass).warn("{}", unknowns.take(100))
+  }
+
+  tailrec fun clean(w: String): String {
+    if(w.isBlank()) {
+      return w
+    }
+    if (!w.first().isLetter()) {
+      return clean(w.drop(1))
+    }
+    if (!w.last().isLetter()) {
+      return clean(w.dropLast(1))
+    }
+    return w
   }
 }

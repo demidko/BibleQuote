@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.util.zip.GZIPInputStream
 
-@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal object HtmlBibleReaderTest {
 
   private lateinit var reader: HtmlBibleReader
