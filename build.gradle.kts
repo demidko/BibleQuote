@@ -20,6 +20,8 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("com.google.truth:truth:1.1.3")
   testImplementation("io.mockk:mockk:1.12.5")
+
+  testImplementation("org.apache.commons:commons-configuration2:2.8.0")
 }
 tasks.compileKotlin {
   kotlinOptions.jvmTarget = "18"
