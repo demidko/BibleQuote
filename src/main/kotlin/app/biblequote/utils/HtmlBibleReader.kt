@@ -64,7 +64,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
   private fun loadNewVerse(): Verse {
     ++verseNumber
     val verseNumberText = verseNumber.toString()
-    val verseBodyText = currentText().substringAfter(verseNumberText)
+    val verseBodyText = currentText().substringAfter(verseNumberText).trim()
     reloadBuffer()
     return Verse(bookName, chapterNumber, verseNumber, verseBodyText)
   }

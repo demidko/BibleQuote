@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import java.util.zip.GZIPInputStream
 
 internal object HtmlBibleReaderTest {
 
@@ -14,8 +13,7 @@ internal object HtmlBibleReaderTest {
   @BeforeAll
   fun init(): Unit {
     reader =
-      javaClass.getResourceAsStream("/bible/rst.html.gz")
-        .let(::GZIPInputStream)
+      javaClass.getResourceAsStream("/bible/rst.html")!!
         .bufferedReader()
         .let(::HtmlBibleReader)
   }

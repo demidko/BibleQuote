@@ -39,7 +39,7 @@
 
 ## Оригинальные тексты
 
-Для доступа к некоторым текстам может потребоваться VPN.
+Для доступа к некоторым текстам может потребоваться [VPN](https://github.com/getlantern/download).
 
 1. [Codex Sinaiticus](https://codexsinaiticus.org/ru/codex/) — фотокопии рукописи Синайского Кодекса с транскрипцией и
    подстрочным переводом.  
@@ -64,7 +64,7 @@
 2. [BibleQuote for Android](https://github.com/YakushevVladimir/BibleQuote-for-Android) — актуальное продолжение
    BibleQuote для Android, также расширяется с помощью подгружаемых модулей.
 3. [BibleQuote 7](https://github.com/BibleQuote/BibleQuote) — новая Windows версия от других разработчиков. Есть
-   официальный сайт с репозиторием модулей.
+   официальный сайт с [репозиторием модулей](https://github.com/BibleQuote/BibleQuote-Modules).
 4. [Unbound Bible](https://github.com/vrybant/unboundbible) — стабильное кроссплатформенное приложение для ПК.
    Примечательно, что используется текст Синодального перевода
    первой редакции 1873его года, что делает приложение более ценным.

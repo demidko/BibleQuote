@@ -4,11 +4,12 @@ import com.github.demidko.aot.WordformMeaning.lookupForMeanings
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory.getLogger
+import java.io.File
 
 @Suppress("NonAsciiCharacters", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal class BibleTest {
 
-  private val bible = javaClass.getResource("/bible/rst.html.gz").let(::Bible)
+  private val bible = javaClass.getResource("/bible/rst.html").let(::Bible)
 
   @Test
   fun `Проверяем что стихи внутри книг загружены в правильном порядке`() {
@@ -116,25 +117,30 @@ internal class BibleTest {
       "Откровение"
     )
 
-    assertThat((1..66).map(bible::nameOf)).isEqualTo(expectedBooksOrder)
+    val actualBooksOrder = bible.booksNames.toList()
+
+    assertThat(actualBooksOrder).isEqualTo(expectedBooksOrder)
   }
 
-  @Test
   fun testLemmas() {
     /**
      * todo
      * Что если мы проведем лемматическую индексацию (словарь: лемма -> стих) дважды
      * Сначала на RST, потом на современном переводе?
      * Таким образом получим дополнительную точность для RST.
+     *
+     * todo Важно учесть, что при лемматизации стих надо ставить в соответствие всем леммам (всем вариантам лемм)
      */
     val lemmas = mutableSetOf<String>()
     val unknowns = mutableSetOf<String>()
     for (book in bible.booksNames) {
       for (chapter in 1..bible.chaptersCount(book)) {
         for (verse in 1..bible.versesCount(book, chapter)) {
-          val words =
-            bible.text(book, chapter, verse).split(' ').map(String::trim).map(this::clean).filter(String::isNotBlank)
-          for (w in words) {
+          val verseText = bible.text(book, chapter, verse)
+          val words = // todo проверить лишние пробелы перед и до этих символов в тексте
+            verseText.split(' ', '-', '.', ',', '!', '?', '(', ')', '«', '»', ';', ':', '[', ']')
+              .filter(String::isNotBlank)
+          for (w in words.filter(String::isNotBlank)) {
             val lemma = lookupForMeanings(w)
             if (lemma.isEmpty()) {
               unknowns.add(w)
@@ -151,7 +157,7 @@ internal class BibleTest {
   }
 
   tailrec fun clean(w: String): String {
-    if(w.isBlank()) {
+    if (w.isBlank()) {
       return w
     }
     if (!w.first().isLetter()) {

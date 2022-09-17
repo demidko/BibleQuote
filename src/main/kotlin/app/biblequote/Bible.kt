@@ -3,11 +3,11 @@ package app.biblequote
 import app.biblequote.utils.HtmlBibleReader
 import app.biblequote.utils.Verse
 import java.net.URL
-import java.util.zip.GZIPInputStream
 
 /**
  * Библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
- * @param url адрес по которому доступен текст Библии в HTML пожатом в GZIP. Структура должна быть такой:
+ * @param url адрес по которому доступен текст Библии.
+ * Структура должна быть такой:
  * ```
  *  <h3>Книга</h3>
  *  <h4>Номер главы</h4>
@@ -25,7 +25,7 @@ class Bible(url: URL) {
   init {
     val reader =
       url.openStream()!!
-        .let(::GZIPInputStream)
+        // todo здесь можно добавить потоковое разжатие
         .bufferedReader()
         .let(::HtmlBibleReader)
     reader.use {
@@ -60,33 +60,10 @@ class Bible(url: URL) {
 
   val booksNames get() = booksToChapters.keys.toSet()
 
-  val booksCount get() = booksToChapters.size
-
-  /**
-   * @param book порядковый номер книги, начиная с `1`
-   */
-  fun nameOf(book: Int) = booksToChapters.keys.elementAt(book - 1)
-
-  /**
-   * @return порядковый номер книги, начиная с `1`
-   */
-  fun numberOf(book: String): Int {
-    val idx = booksToChapters.keys.indexOf(book)
-    check(idx >= 0) {
-      "Не найдена книга '$book'"
-    }
-    return idx + 1
-  }
-
   /**
    * @param book название книги
    */
   fun chaptersCount(book: String) = booksToChapters[book]!!.size
-
-  /**
-   * @param book порядковый номер книги, начиная с `1`
-   */
-  fun chaptersCount(book: Int) = chaptersCount(nameOf(book))
 
   /**
    * @param chapter порядковый номер главы, начиная с `1`
@@ -97,12 +74,6 @@ class Bible(url: URL) {
   }
 
   /**
-   * @param book порядковый номер книги, начиная с `1`
-   * @param chapter порядковый номер главы, начиная с `1`
-   */
-  fun versesCount(book: Int, chapter: Int) = versesCount(nameOf(book), chapter)
-
-  /**
    * @param chapter порядковый номер главы, начиная с `1`
    * @param verse порядковый номер стиха, начиная с `1`
    */
@@ -111,29 +82,4 @@ class Bible(url: URL) {
     val verseIdx = verse - 1
     return booksToChapters[book]!![chapterIdx][verseIdx]
   }
-
-  /**
-   * @param book порядковый номер книги, начиная с `1`
-   * @param chapter порядковый номер главы, начиная с `1`
-   * @param verse порядковый номер стиха, начиная с `1`
-   */
-  fun text(book: Int, chapter: Int, verse: Int): String {
-    return text(nameOf(book), chapter, verse)
-  }
-
-  /**
-   * @param chapterNumber порядковый номер главы, начиная с `1`
-   */
-  fun text(bookName: String, chapterNumber: Int) = buildString {
-    val versesCount = versesCount(bookName, chapterNumber)
-    for (verseNumber in 1..versesCount) {
-      append(text(bookName, chapterNumber, verseNumber))
-    }
-  }
-
-  /**
-   * @param bookNumber порядковый номер книги, начиная с `1`
-   * @param chapterNumber порядковый номер главы, начиная с `1`
-   */
-  fun text(bookNumber: Int, chapterNumber: Int) = text(nameOf(bookNumber), chapterNumber)
 }
