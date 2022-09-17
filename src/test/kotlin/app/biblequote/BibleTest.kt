@@ -11,6 +11,7 @@ import java.io.File
 @Suppress("NonAsciiCharacters", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal class BibleTest {
 
+  // todo все остальные переводы нужно сверять с этим (по кол-ву книг и глав со стихами в них)
   private val bible = javaClass.getResource("/bible/rst.html").let(::Bible)
 
   @Test
