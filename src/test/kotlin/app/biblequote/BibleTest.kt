@@ -135,6 +135,7 @@ internal class BibleTest {
     val names = iniConfig.getProperty("FullName") as List<String>
     logger.warn("{}", names)
     logger.warn("{}", paths)
+
     // todo осталось слить в один html с добавлением h3 имен в начале и удалением <book>
   }
 
