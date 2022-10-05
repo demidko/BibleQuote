@@ -125,20 +125,6 @@ internal class BibleTest {
     assertThat(actualBooksOrder).isEqualTo(expectedBooksOrder)
   }
 
-  @Test
-  fun compileZb() {
-    val iniConfig = INIConfiguration()
-    val file = File("src/main/resources/bible/zb/bibleqt.ini").bufferedReader()
-    iniConfig.read(file)
-    val logger = LoggerFactory.getLogger("lol")
-    val paths = iniConfig.getProperty("PathName") as List<String>
-    val names = iniConfig.getProperty("FullName") as List<String>
-    logger.warn("{}", names)
-    logger.warn("{}", paths)
-
-    // todo осталось слить в один html с добавлением h3 имен в начале и удалением <book>
-  }
-
   fun testLemmas() {
     /**
      * todo
