@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.slf4j.LoggerFactory.getLogger
+import java.io.File
 
 @Suppress("NonAsciiCharacters", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 internal class BibleTest {
@@ -17,8 +18,15 @@ internal class BibleTest {
 
   @Test
   fun testCars() {
-    val cars = centralAsianRussianScriptures();
-
+    val r = javaClass.getResourceAsStream("/bible/cars.html")!!.bufferedReader()
+    val f = File("cars.html")
+    for(line in r.lines()) {
+      if(line.startsWith("<h") || line.startsWith("<p><sup>")) {
+        f.appendText("\n$line")
+      } else {
+        f.appendText(line)
+      }
+    }
   }
 
   fun testLemmas() {

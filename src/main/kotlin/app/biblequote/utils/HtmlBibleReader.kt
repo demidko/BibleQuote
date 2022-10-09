@@ -24,7 +24,6 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
   private var bookName = "?"
   private var chapterNumber: UShort = 0u
   private var verseNumber: UShort = 0u
-  // todo буфер должен расширяться перенесенными строками
   private var currentBuffer = null as Document?
 
   init {
@@ -65,16 +64,15 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun loadNewVerse(): Verse {
     ++verseNumber
-    val verseNumber = verseNumber.toString()
+    val verseNumberAsText = verseNumber.toString()
     val verseText = currentText()
-    val verseNumberIdx = verseText.indexOf(verseNumber)
-    check(verseNumberIdx >= 0) { "$bookName $chapterNumber:${this.verseNumber} not found in text: ${currentText()}" }
-
-    val pureTextIdx = verseNumberIdx + verseNumber.length
+    val verseNumberIdx = verseText.indexOf(verseNumberAsText)
+    check(verseNumberIdx >= 0) { "$bookName $chapterNumber:${verseNumber} not found in text: ${currentText()}" }
+    val pureTextIdx = verseNumberIdx + verseNumberAsText.length
     val pureText = verseText.substring(pureTextIdx).trim()
-    check(pureText.isNotEmpty()) { "$bookName $chapterNumber:${this.verseNumber} is empty" }
+    check(pureText.isNotEmpty()) { "$bookName $chapterNumber:${verseNumber} is empty" }
     reloadBuffer()
-    return Verse(bookName, chapterNumber, this.verseNumber, pureText)
+    return Verse(bookName, chapterNumber, verseNumber, pureText)
   }
 
   fun nextVerse() = when {
