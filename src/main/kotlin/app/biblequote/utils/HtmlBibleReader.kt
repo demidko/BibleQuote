@@ -2,7 +2,6 @@ package app.biblequote.utils
 
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
-import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.Closeable
 
@@ -25,6 +24,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
   private var bookName = "?"
   private var chapterNumber: UShort = 0u
   private var verseNumber: UShort = 0u
+  // todo буфер должен расширяться перенесенными строками
   private var currentBuffer = null as Document?
 
   init {
@@ -48,6 +48,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun loadNewBook(): Verse {
     chapterNumber = 0u
+
     bookName = currentText()
     reloadBuffer()
     return loadNewChapter()
@@ -64,22 +65,16 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun loadNewVerse(): Verse {
     ++verseNumber
-    val verseNumberText = verseNumber.toString()
-    val verseNumberInTextIdx = currentText().indexOf(verseNumberText)
-    if (verseNumberInTextIdx == -1) {
-      LoggerFactory.getLogger(this.javaClass).warn("Book $bookName Chapter $chapterNumber Verse $verseNumber not found in text: ${currentText()}")
-      reloadBuffer()
-      return loadNewVerse()
-    }
-    val purseVerseTextIdx = verseNumberInTextIdx + verseNumberText.length
-    val verseBodyText = currentText().substring(purseVerseTextIdx).trim()
-    if (verseBodyText.isBlank()) {
-      reloadBuffer()
-      LoggerFactory.getLogger(this.javaClass).warn("Book $bookName Chapter $chapterNumber Verse $verseNumber body is blank: ${currentText()}")
-      return loadNewVerse()
-    }
+    val verseNumber = verseNumber.toString()
+    val verseText = currentText()
+    val verseNumberIdx = verseText.indexOf(verseNumber)
+    check(verseNumberIdx >= 0) { "$bookName $chapterNumber:${this.verseNumber} not found in text: ${currentText()}" }
+
+    val pureTextIdx = verseNumberIdx + verseNumber.length
+    val pureText = verseText.substring(pureTextIdx).trim()
+    check(pureText.isNotEmpty()) { "$bookName $chapterNumber:${this.verseNumber} is empty" }
     reloadBuffer()
-    return Verse(bookName, chapterNumber, verseNumber, verseBodyText)
+    return Verse(bookName, chapterNumber, this.verseNumber, pureText)
   }
 
   fun nextVerse() = when {
