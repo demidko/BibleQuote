@@ -16,11 +16,10 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jsoup:jsoup:1.15.3")
   implementation("com.github.demidko:aot:2022.08.06")
-  implementation("org.apache.lucene:lucene-queryparser:9.3.0")
+  implementation("org.apache.lucene:lucene-queryparser:9.4.0")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("com.google.truth:truth:1.1.3")
   testImplementation("io.mockk:mockk:1.13.2")
-  testImplementation("org.apache.commons:commons-configuration2:2.8.0")
 }
 tasks.compileKotlin {
   kotlinOptions.jvmTarget = "17"

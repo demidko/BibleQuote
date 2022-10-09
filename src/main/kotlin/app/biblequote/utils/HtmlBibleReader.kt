@@ -2,6 +2,7 @@ package app.biblequote.utils
 
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
+import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.Closeable
 
@@ -64,8 +65,17 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
   private fun loadNewVerse(): Verse {
     ++verseNumber
     val verseNumberText = verseNumber.toString()
-    val verseBodyText = currentText().substringAfter(verseNumberText).trim()
-    if(verseBodyText.isBlank()) {
+    val verseNumberInTextIdx = currentText().indexOf(verseNumberText)
+    if (verseNumberInTextIdx == -1) {
+      LoggerFactory.getLogger(this.javaClass).warn("Book $bookName Chapter $chapterNumber Verse $verseNumber not found in text: ${currentText()}")
+      reloadBuffer()
+      return loadNewVerse()
+    }
+    val purseVerseTextIdx = verseNumberInTextIdx + verseNumberText.length
+    val verseBodyText = currentText().substring(purseVerseTextIdx).trim()
+    if (verseBodyText.isBlank()) {
+      reloadBuffer()
+      LoggerFactory.getLogger(this.javaClass).warn("Book $bookName Chapter $chapterNumber Verse $verseNumber body is blank: ${currentText()}")
       return loadNewVerse()
     }
     reloadBuffer()
