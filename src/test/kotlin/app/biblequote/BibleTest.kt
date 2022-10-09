@@ -18,15 +18,7 @@ internal class BibleTest {
 
   @Test
   fun testCars() {
-    val r = javaClass.getResourceAsStream("/bible/cars.html")!!.bufferedReader()
-    val f = File("cars.html")
-    for(line in r.lines()) {
-      if(line.startsWith("<h") || line.startsWith("<p><sup>")) {
-        f.appendText("\n$line")
-      } else {
-        f.appendText(line)
-      }
-    }
+    centralAsianRussianScriptures()
   }
 
   fun testLemmas() {
