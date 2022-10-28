@@ -62,15 +62,17 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
     return loadNewVerse()
   }
 
-  private fun loadNewVerse(): Verse {
+  private tailrec fun loadNewVerse(): Verse {
     ++verseNumber
     val verseNumberAsText = verseNumber.toString()
     val verseText = currentText()
     val verseNumberIdx = verseText.indexOf(verseNumberAsText)
-    check(verseNumberIdx >= 0) { "Стих $bookName $chapterNumber:${verseNumber} не найден в тексте: ${currentText()}" }
+    if(verseNumberIdx >= 0) {
+      "Стих $bookName $chapterNumber:$verseNumber не найден в тексте: $verseText"
+    }
     val pureTextIdx = verseNumberIdx + verseNumberAsText.length
     val pureText = verseText.substring(pureTextIdx).trim()
-    check(pureText.isNotEmpty()) { "Стих $bookName $chapterNumber:${verseNumber} отсутствует" }
+    check(pureText.isNotEmpty()) { "Стих $bookName $chapterNumber:$verseNumber отсутствует" }
     reloadBuffer()
     return Verse(bookName, chapterNumber, verseNumber, pureText)
   }

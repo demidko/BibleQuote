@@ -12,13 +12,11 @@ import java.io.File
 internal class BibleTest {
 
 
-  fun centralAsianRussianScriptures(): Bible {
-    return javaClass.getResource("/bible/cars.html").let(::Bible)
-  }
-
   @Test
-  fun testCars() {
-    centralAsianRussianScriptures()
+  fun jubileeBibleTest() {
+    javaClass
+      .getResource("/bible/jbl.html")
+      .let(::Bible)
   }
 
   fun testLemmas() {
