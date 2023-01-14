@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 class Api(private val translations: Map<String, Bible>) {
 
   /**
-   * Список доступных переводов Библии приводится в общепринятых английских аббревиатурах
+   * Список доступных переводов Библии приводится в общепринятых английских аббревиатурах.
    */
   @GetMapping("/api/translations")
   fun translations(): Set<String> {

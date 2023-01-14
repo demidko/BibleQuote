@@ -3,19 +3,13 @@ package app.biblequote
 import com.google.common.truth.Truth.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.ApplicationContext
 
 @SpringBootTest
 @Suppress("NonAsciiCharacters")
 internal class AppTest {
 
   @Autowired
-  private lateinit var applicationContext: ApplicationContext
-
-  @Autowired
-  @Qualifier("russianSynodalTranslation")
   private lateinit var russianSynodalTranslation: Bible
 
   @Test
@@ -127,10 +121,5 @@ internal class AppTest {
         "потому что Я звал, и вы не отвечали; говорил, и вы не слушали, " +
         "но делали злое в очах Моих и избирали то, что было неугодно Мне."
     )
-  }
-
-  @Test
-  fun `Проверяем что последовательность книг и глав в разных переводах одинакова с синодальным переводом`() {
-    println(russianSynodalTranslation)
   }
 }

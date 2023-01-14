@@ -6,6 +6,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.scheduling.annotation.EnableScheduling
 
+// todo включить все переводы как @Bean: нужно будет разгрести возникающие ошибки
 @EnableScheduling
 @SpringBootConfiguration
 @EnableAutoConfiguration
@@ -104,6 +105,7 @@ class App {
   /**
    * Совместное издание Института перевода Библии при Заокской духовной академии и Библейско-богословского института св. апостола Андрея.
    */
+  @Bean
   fun zbBible(): Bible {
     return javaClass.getResource("/bible/zb.html").let(::Bible)
   }

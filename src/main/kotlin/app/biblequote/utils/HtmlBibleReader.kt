@@ -62,7 +62,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
     return loadNewVerse()
   }
 
-  private tailrec fun loadNewVerse(): Verse {
+  private fun loadNewVerse(): Verse {
     ++verseNumber
     val verseNumberAsText = verseNumber.toString()
     val verseText = currentText()
