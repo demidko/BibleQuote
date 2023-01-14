@@ -2,23 +2,23 @@ package app.biblequote
 
 import com.google.common.truth.Truth.*
 import org.junit.jupiter.api.Test
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.SpringBootConfiguration
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationContext
-import org.springframework.context.annotation.Import
-import org.springframework.test.context.junit4.SpringRunner
 
 @SpringBootTest
 @Suppress("NonAsciiCharacters")
 internal class AppTest {
 
   @Autowired
-  private lateinit var appContext: ApplicationContext
+  private lateinit var applicationContext: ApplicationContext
 
-/*  @Test
+  @Autowired
+  @Qualifier("russianSynodalTranslation")
+  private lateinit var russianSynodalTranslation: Bible
+
+  @Test
   fun `Убеждаемся что книги загружены в правильном порядке`() {
     val expectedBooksOrder = listOf(
       "Бытие",
@@ -98,15 +98,15 @@ internal class AppTest {
       "Откровение"
     )
 
-    val actualBooksOrder = bible.booksNames.toList()
+    val actualBooksOrder = russianSynodalTranslation.booksNames.toList()
 
     assertThat(actualBooksOrder).isEqualTo(expectedBooksOrder)
-  }*/
+  }
 
-/*  @Test
+  @Test
   fun `Проверяем корректность синодального перевода`() {
     assertThat(
-      russianSynodalTranslation().text(
+      russianSynodalTranslation.text(
         "Откровение",
         13,
         10
@@ -117,7 +117,7 @@ internal class AppTest {
         "Здесь терпение и вера святых."
     )
     assertThat(
-      russianSynodalTranslation().text(
+      russianSynodalTranslation.text(
         "Исаия",
         65,
         12
@@ -127,10 +127,10 @@ internal class AppTest {
         "потому что Я звал, и вы не отвечали; говорил, и вы не слушали, " +
         "но делали злое в очах Моих и избирали то, что было неугодно Мне."
     )
-  }*/
+  }
 
   @Test
   fun `Проверяем что последовательность книг и глав в разных переводах одинакова с синодальным переводом`() {
-    println(appContext)
+    println(russianSynodalTranslation)
   }
 }

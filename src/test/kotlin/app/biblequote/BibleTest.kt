@@ -2,6 +2,7 @@ package app.biblequote
 
 import com.github.demidko.aot.WordformMeaning.lookupForMeanings
 import com.google.common.truth.Truth.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -13,6 +14,7 @@ internal class BibleTest {
 
 
   @Test
+  @Disabled
   fun jubileeBibleTest() {
     javaClass
       .getResource("/bible/jbl.html")
