@@ -1,5 +1,6 @@
 package app.biblequote.utils
 
+import app.biblequote.Bible
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

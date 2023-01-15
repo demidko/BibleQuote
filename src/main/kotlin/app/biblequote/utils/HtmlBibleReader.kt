@@ -9,15 +9,14 @@ import java.io.Closeable
  * Класс для чтения Библии из html стих за стихом.
  * @param reader формат текста должен быть таким:
  * ```
- *  <h3>Книга</h3>
- *  <h4>Глава</h4>
+ *  <h3>Книга (т. е. название)</h3>
+ *  <h4>Глава (т. е. число)</h4>
  *  <p><sup>Номер стиха, например 1</sup> собственно текст стиха 1
  *  <p><sup>Номер стиха, например 2</sup> собственно текст стиха 2
  *  И так далее для всех последующих глав и стихов
  * ```
  * Текст может состоять из нескольких и более книг.
  * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
- *
  */
 class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
@@ -67,7 +66,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
     val verseNumberAsText = verseNumber.toString()
     val verseText = currentText()
     val verseNumberIdx = verseText.indexOf(verseNumberAsText)
-    if(verseNumberIdx >= 0) {
+    check(verseNumberIdx >= 0) {
       "Стих $bookName $chapterNumber:$verseNumber не найден в тексте: $verseText"
     }
     val pureTextIdx = verseNumberIdx + verseNumberAsText.length

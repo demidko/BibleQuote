@@ -98,6 +98,7 @@ class App {
   /**
    * Новый Завет в переводе Давида Стерна для мессианских евреев.
    */
+  @Bean
   fun sternNewTestament(): Bible {
     return javaClass.getResource("/bible/stern.html").let(::Bible)
   }
