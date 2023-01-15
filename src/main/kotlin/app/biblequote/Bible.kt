@@ -25,7 +25,6 @@ class Bible(url: URL) {
   init {
     val reader =
       url.openStream()!!
-        // todo здесь можно добавить потоковое разжатие
         .bufferedReader()
         .let(::HtmlBibleReader)
     reader.use {

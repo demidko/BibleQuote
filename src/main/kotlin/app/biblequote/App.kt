@@ -119,7 +119,7 @@ class App {
 
   @Bean
   fun api(): Api {
-    return Api(translations())
+    return Api()
   }
 }
 
