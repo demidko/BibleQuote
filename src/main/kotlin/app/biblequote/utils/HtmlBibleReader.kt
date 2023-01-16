@@ -2,12 +2,13 @@ package app.biblequote.utils
 
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.io.BufferedReader
 import java.io.Closeable
 
 /**
  * Класс для чтения Библии из html стих за стихом.
- * @param reader формат текста должен быть таким:
+ * @param reader формат текста _должен_ быть таким:
  * ```
  *  <h3>Книга (т. е. название)</h3>
  *  <h4>Глава (т. е. число)</h4>
@@ -15,15 +16,18 @@ import java.io.Closeable
  *  <p><sup>Номер стиха, например 2</sup> собственно текст стиха 2
  *  И так далее для всех последующих глав и стихов
  * ```
+ * Тег `<sup>` может быть опущен. Главное — наличие номера стиха.
  * Текст может состоять из нескольких и более книг.
  * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
  */
 class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
+  private var line = 0UL
   private var bookName = "?"
-  private var chapterNumber: UShort = 0u
-  private var verseNumber: UShort = 0u
+  private var chapterNumber = 0.toUShort()
+  private var verseNumber = 0.toUShort()
   private var currentBuffer = null as Document?
+  private var currentBody = null as Element?
 
   init {
     reloadBuffer()
@@ -34,19 +38,25 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
       null -> null
       else -> parse(l)
     }
+    currentBody = when (currentBuffer) {
+      null -> null
+      else -> currentBuffer!!.body()
+    }
+    ++line
   }
 
   val hasNext get() = currentBuffer != null
 
-  private fun currentText() = currentBuffer!!.wholeText()
+  private fun currentText() = currentBuffer!!.text()
 
-  private fun isCurrentTag(tag: String) = currentBuffer!!.body().firstElementChild()!!.tagName() == tag
+  private fun currentData() = currentBuffer!!.data()
+
+  private fun isCurrentTag(tag: String) = currentBody!!.firstElementChild()!!.tagName() == tag
 
   private val isNewBook get() = isCurrentTag("h3")
 
   private fun loadNewBook(): Verse {
     chapterNumber = 0u
-
     bookName = currentText()
     reloadBuffer()
     return loadNewChapter()
@@ -54,9 +64,14 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private val isNewChapter get() = isCurrentTag("h4")
 
+  private val isNewVerse get() = isCurrentTag("p")
+
   private fun loadNewChapter(): Verse {
     ++chapterNumber
     verseNumber = 0u
+    check(chapterNumber.toString() == currentText()) {
+      "Глава $chapterNumber не найдена на линии $line: ${currentData()}"
+    }
     reloadBuffer()
     return loadNewVerse()
   }
@@ -67,11 +82,13 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
     val verseText = currentText()
     val verseNumberIdx = verseText.indexOf(verseNumberAsText)
     check(verseNumberIdx >= 0) {
-      "Стих $bookName $chapterNumber:$verseNumber не найден в тексте: $verseText"
+      "Стих $bookName $chapterNumber:$verseNumber не найден на линии $line: ${currentData()}"
     }
     val pureTextIdx = verseNumberIdx + verseNumberAsText.length
     val pureText = verseText.substring(pureTextIdx).trim()
-    check(pureText.isNotEmpty()) { "Стих $bookName $chapterNumber:$verseNumber отсутствует" }
+    check(pureText.isNotEmpty()) {
+      "Стих $bookName $chapterNumber:$verseNumber отсутствует на линии $line"
+    }
     reloadBuffer()
     return Verse(bookName, chapterNumber, verseNumber, pureText)
   }
@@ -79,7 +96,8 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
   fun nextVerse() = when {
     isNewBook -> loadNewBook()
     isNewChapter -> loadNewChapter()
-    else -> loadNewVerse()
+    isNewVerse -> loadNewVerse()
+    else -> error("Нераспознан html на линии $line: ${currentData()}")
   }
 
   override fun close() {

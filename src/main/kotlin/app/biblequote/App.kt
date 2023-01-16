@@ -31,6 +31,7 @@ class App {
    * Осуществлен International Bible Society (BIBLICA).
    * В нашем приложении он используется только для улучшенной лемматизации.
    */
+  @Bean
   fun centralAsianRussianScriptures(): Bible {
     return javaClass.getResource("/bible/cars.html").let(::Bible)
   }
