@@ -106,16 +106,8 @@ class App {
   /**
    * Совместное издание Института перевода Библии при Заокской духовной академии и Библейско-богословского института св. апостола Андрея.
    */
-  @Bean
   fun zbBible(): Bible {
     return javaClass.getResource("/bible/zb.html").let(::Bible)
-  }
-
-  @Bean
-  fun translations(): Map<String, Bible> {
-    return mapOf(
-      "rst" to russianSynodalTranslation(),
-    )
   }
 
   @Bean
