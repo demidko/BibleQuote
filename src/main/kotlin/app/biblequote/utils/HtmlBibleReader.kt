@@ -21,7 +21,6 @@ import java.io.Closeable
  * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
  */
 class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
-
   private var line = 0UL
   private var bookName = "?"
   private var chapterNumber = 0.toUShort()
@@ -49,8 +48,6 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun currentText() = currentBuffer!!.text()
 
-  private fun currentData() = currentBuffer!!.data()
-
   private fun isCurrentTag(tag: String) = currentBody!!.firstElementChild()!!.tagName() == tag
 
   private val isNewBook get() = isCurrentTag("h3")
@@ -69,8 +66,9 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
   private fun loadNewChapter(): Verse {
     ++chapterNumber
     verseNumber = 0u
-    check(chapterNumber.toString() == currentText()) {
-      "Глава $chapterNumber не найдена на линии $line: ${currentData()}"
+    val text = currentText()
+    check(chapterNumber.toString() == text) {
+      "Номер главы $chapterNumber не найден на линии $line: $text"
     }
     reloadBuffer()
     return loadNewVerse()
@@ -82,12 +80,12 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
     val verseText = currentText()
     val verseNumberIdx = verseText.indexOf(verseNumberAsText)
     check(verseNumberIdx >= 0) {
-      "Стих $bookName $chapterNumber:$verseNumber не найден на линии $line: ${currentData()}"
+      "Номер стиха $bookName $chapterNumber:$verseNumber не найден на линии $line: $verseText"
     }
     val pureTextIdx = verseNumberIdx + verseNumberAsText.length
     val pureText = verseText.substring(pureTextIdx).trim()
     check(pureText.isNotEmpty()) {
-      "Стих $bookName $chapterNumber:$verseNumber отсутствует на линии $line"
+      "Текст стиха $bookName $chapterNumber:$verseNumber отсутствует на линии $line"
     }
     reloadBuffer()
     return Verse(bookName, chapterNumber, verseNumber, pureText)
@@ -97,7 +95,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
     isNewBook -> loadNewBook()
     isNewChapter -> loadNewChapter()
     isNewVerse -> loadNewVerse()
-    else -> error("Нераспознан html на линии $line: ${currentData()}")
+    else -> error("Не распознан html на линии $line")
   }
 
   override fun close() {

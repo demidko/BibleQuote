@@ -92,7 +92,7 @@ internal class AppTest {
       "Откровение"
     )
 
-    val actualBooksOrder = russianSynodalTranslation.booksNames.toList()
+    val actualBooksOrder = russianSynodalTranslation.booksNames
 
     assertThat(actualBooksOrder).isEqualTo(expectedBooksOrder)
   }

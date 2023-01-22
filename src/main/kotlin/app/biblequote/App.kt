@@ -1,12 +1,13 @@
 package app.biblequote
 
+import me.bazhenov.groovysh.spring.GroovyShellServiceBean
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.scheduling.annotation.EnableScheduling
 
-// todo включить все переводы как @Bean: нужно будет разгрести возникающие ошибки
+
 @EnableScheduling
 @SpringBootConfiguration
 @EnableAutoConfiguration
@@ -42,6 +43,7 @@ class App {
    * В частности, из хороших изменений, древнееврейское слово 𐤉𐤄𐤅𐤄 (буквы ЙХВХ, справа налево, произносится ЯХВЕ),
    * корректно переведено как Господь, а не [устаревшей транслитерацией "Иегова"](https://www.bible.in.ua/Doc/yh.htm).
    */
+  //@Bean
   fun jubileeBible(): Bible {
     return javaClass.getResource("/bible/jbl.html").let(::Bible)
   }
@@ -51,6 +53,16 @@ class App {
    */
   fun kassianNewTestamentTranslation(): Bible {
     return javaClass.getResource("/bible/knt.html").let(::Bible)
+  }
+
+  @Bean
+  fun groovyShell(): GroovyShellServiceBean {
+    return GroovyShellServiceBean().apply {
+      setPublishContextBeans(true)
+      setPort(6789)
+      setDisableImportCompletions(true)
+      isLaunchAtStart = true
+    }
   }
 
   /**

@@ -16,6 +16,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jsoup:jsoup:1.15.3")
+  implementation("me.bazhenov.groovy-shell:groovy-shell-server:2.2.3")
   implementation("com.github.demidko:aot:2022.11.28")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("com.google.truth:truth:1.1.3")

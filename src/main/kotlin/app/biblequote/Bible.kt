@@ -57,7 +57,7 @@ class Bible(url: URL) {
     }
   }
 
-  val booksNames get() = booksToChapters.keys.toSet()
+  val booksNames get() = booksToChapters.keys.toList()
 
   /**
    * @param book название книги
