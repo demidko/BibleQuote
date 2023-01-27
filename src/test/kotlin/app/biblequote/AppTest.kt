@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
+/**
+ * Этот тест становится не нужен, логика проверок перенесена в основной код
+ */
 @SpringBootTest
 @Suppress("NonAsciiCharacters")
 internal class AppTest {
@@ -13,7 +16,7 @@ internal class AppTest {
   private lateinit var russianSynodalTranslation: Bible
 
   @Test
-  fun `Убеждаемся что книги загружены в правильном порядке`() {
+  fun `Убеждаемся что книги во всех переводах загружены в правильном порядке`() {
     val expectedBooksOrder = listOf(
       "Бытие",
       "Исход",
