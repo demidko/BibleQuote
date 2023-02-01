@@ -21,6 +21,8 @@ hs_err_pid*
 .idea
 build
 .DS_Store
+frontend/node_modules
+frontend/dist
 
 
 

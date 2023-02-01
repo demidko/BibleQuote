@@ -6,5 +6,5 @@ package app.biblequote.utils
  * Это нужно для удобства последующей лемматизации (чтобы было легче соотнести одни участки текста с аналогичными в других переводах).
  */
 class Markup {
-  private val mapper = ObjectMapp
+
 }
