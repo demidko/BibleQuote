@@ -1,8 +1,8 @@
 // noinspection JSUnresolvedFunction
 
 const MiniCss = require("mini-css-extract-plugin");
-const RemovePlugin = require("remove-files-webpack-plugin");
 const webpack = require("webpack");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   plugins: [
@@ -11,20 +11,15 @@ module.exports = {
       jQuery: "jquery",
     }),
     new MiniCss(),
-    new RemovePlugin({
-      before: {
-        test: [
-          {
-            folder: "./dist",
-            method: () => true
-          }
-        ],
-        exclude: [
-          "./dist/index.html",
-          "./dist/favicon",
-        ]
-      }
-    })
+    new CopyPlugin({
+      patterns: [
+        "./src/index.html",
+        {
+          from: "./src/favicon",
+          to: "./favicon/.",
+        },
+      ],
+    }),
   ],
   module: {
     rules: [
@@ -33,5 +28,9 @@ module.exports = {
         use: [MiniCss.loader, "css-loader"],
       },
     ],
+  },
+  entry: "./src/main.js",
+  output: {
+    clean: true,
   },
 };

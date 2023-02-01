@@ -9,13 +9,13 @@ RUN npm ci && npm run build
 
 FROM gradle:jdk19 as backend
 WORKDIR /project
-COPY src ./src
-COPY build.gradle.kts ./build.gradle.kts
-COPY settings.gradle.kts ./settings.gradle.kts
+COPY backend/src ./src
+COPY backend/build.gradle.kts ./build.gradle.kts
+COPY backend/settings.gradle.kts ./settings.gradle.kts
 COPY --from=frontend /project/dist ./src/main/resources/public
 RUN gradle clean build
 
-FROM openjdk:21-bullseye as application
+FROM openjdk:21-bullseye as app
 WORKDIR /root
 COPY --from=backend /project/build/libs/*-boot.jar ./app
 ENTRYPOINT ["java", "-jar", "--enable-preview", "/root/app"]
