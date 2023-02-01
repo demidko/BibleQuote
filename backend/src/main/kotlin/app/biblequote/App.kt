@@ -55,6 +55,12 @@ class App {
     return javaClass.getResource("/bible/knt.html").let(::Bible)
   }
 
+  /**
+   * Шелл с доступом к бинам. Подключиться можно с бекенда, например
+   * ```
+   * ssh -o StrictHostKeyChecking=no 127.1 -p 6789
+   * ```
+   */
   @Bean
   fun groovyShell(): GroovyShellServiceBean {
     return GroovyShellServiceBean().apply {
