@@ -1,6 +1,5 @@
 FROM node as frontend
 WORKDIR /project
-COPY frontend/dist/index.html ./dist/index.html
 COPY frontend/src ./src
 COPY frontend/package.json ./package.json
 COPY frontend/package-lock.json ./package-lock.json
