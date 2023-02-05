@@ -19,11 +19,25 @@ class App {
   }
 
   /**
-   * Резолвер общепринятой аббревиатуры перевода в экземпляр перевода Библии
+   * Резолвер общепринятых аббревиатур переводов в собственно экземпляры Библии
    */
   @Bean
   fun abbrResolver(): Map<String, Bible> {
-    TODO()
+    return mapOf(
+      "rst" to russianSynodalTranslation(),
+      "cars" to centralAsianRussianScriptures(),
+      "jbl" to jubileeBible(),
+      "knt" to kassianNewTestamentTranslation(),
+      "mdr" to modernBible(),
+      "nrt" to newRussianTranslation(),
+      "otnt" to openTranslationNewTestament(),
+      "rbo2011" to russianBibleSociety2011(),
+      "rbo2015" to russianBibleSociety2015(),
+      "rbo" to russianBibleSociety2015(),
+      "rsp" to russianModernTranslation(),
+      "stern" to sternNewTestament(),
+      "zb" to zbBible()
+    )
   }
 
   /**
@@ -78,7 +92,6 @@ class App {
    * так как выглядит попыткой продать Библию под соусом мусульманской терминологии.
    * Продается под брендом "Смысловой перевод Таурата, Книги Пророков, Забура и Инжила".
    * Осуществлен International Bible Society (BIBLICA).
-   * В нашем приложении он используется для улучшенной лемматизации.
    */
   @Bean
   fun centralAsianRussianScriptures(): Bible {
@@ -130,7 +143,7 @@ class App {
    */
   @Bean
   fun openTranslationNewTestament(): Bible {
-    return Bible(rstMarkup(), "/bible/otnt.html")
+    return Bible(rstNewTestamentMarkup(), "/bible/otnt.html")
   }
 
 
