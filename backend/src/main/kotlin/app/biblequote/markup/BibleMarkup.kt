@@ -1,4 +1,4 @@
-package app.biblequote.utils
+package app.biblequote.markup
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -21,7 +21,7 @@ import java.net.URL
  * где первая содержит три главы (по 10, 4 и 6 стихов соответственно),
  * а вторая две главы (по 7 и 8 стихов соответственно).
  */
-class Markup(url: URL) {
+class BibleMarkup(url: URL) {
 
   /**
    * Словарь ставит в соответствие названию книги список количества стихов для каждой главы.
@@ -35,29 +35,24 @@ class Markup(url: URL) {
     }
   }
 
-  fun contains(name: String): Boolean {
-    return booksToChaptersVerses.containsKey(name)
+  /**
+   * @return одноразовая сущность для потоковой проверки разметки
+   */
+  fun checker(): MarkupChecker {
+    return MarkupChecker(iterator())
   }
 
-  fun contains(bookName: String, chapterNumber: UShort): Boolean {
-    require(chapterNumber > 0u)
-    val chapters = booksToChaptersVerses[bookName] ?: return false
-    return chapterNumber <= chapters.size.toUShort()
-  }
-
-  fun contains(bookName: String, chapterNumber: UShort, verseNumber: UShort): Boolean {
-    require(chapterNumber > 0u)
-    require(verseNumber > 0u)
-    val chapters = booksToChaptersVerses[bookName] ?: return false
-    val chapterIdx = chapterNumber.toInt() - 1
-    val verses = chapters.getOrNull(chapterIdx) ?: return false
-    return verseNumber <= verses
-  }
-
-  fun isLast(bookName: String, chapterNumber: UShort, verseNumber: UShort): Boolean {
-    require(contains(bookName, chapterNumber, verseNumber))
-    val nextVerseNumber = StrictMath.addExact(verseNumber.toInt(), 1)
-
-    return !contains(bookName, chapterNumber, verseNumber + 1u) && !contains(bookName, )
+  private fun iterator(): Iterator<VerseRef> {
+    return iterator {
+      for ((book, chapters) in booksToChaptersVerses) {
+        for ((chapterIdx, versesCount) in chapters.withIndex()) {
+          val chapterNumber = chapterIdx.plus(1).toUShort()
+          val versesNumbers = 1.toUShort().rangeTo(versesCount).map(UInt::toUShort)
+          for (verseNumber in versesNumbers) {
+            yield(VerseRef(book, chapterNumber, verseNumber))
+          }
+        }
+      }
+    }
   }
 }

@@ -1,59 +1,50 @@
 package app.biblequote
 
-import app.biblequote.utils.HtmlBibleReader
-import app.biblequote.utils.Verse
+import app.biblequote.io.HtmlBibleReader
+import app.biblequote.markup.BibleMarkup
+import app.biblequote.markup.MarkupChecker
 import java.net.URL
 
 /**
  * Библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
- * @param url адрес по которому доступен текст Библии.
- * Структура должна быть такой:
- * ```
- *  <h3>Книга</h3>
- *  <h4>Номер главы</h4>
- *  <p><sup>1</sup> собственно текст стиха 1
- *  <p><sup>2</sup> собственно текст стиха 2
- *  И так далее для всех последующих глав и стихов
- * ```
- * Текст может состоять из нескольких и более книг.
- * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
+ * @param url ресурс по ссылке должен удовлетворять требованиям [HtmlBibleReader]
+ * @param markup разметка для проверки
  */
-class Bible(url: URL) {
+class Bible(url: URL, markup: BibleMarkup) {
 
-  private val booksToChapters = mutableMapOf<String, MutableList<MutableList<String>>>()
+  companion object {
 
-  init {
-    val reader =
-      url.openStream()!!
-        .bufferedReader()
-        .let(::HtmlBibleReader)
-    reader.use {
-      while (reader.hasNext) {
-        add(reader.nextVerse())
+    /**
+     * @param name ресурс должен удовлетворять требованиям [HtmlBibleReader]
+     * @param markup разметка для проверки
+     */
+    fun Bible(name: String, markup: Markup): Bible {
+      val bufferedReader = Bible::class.java.getResourceAsStream(name)!!.bufferedReader()
+      val htmlReader = HtmlBibleReader(bufferedReader, markup)
+      htmlReader.use {
+        return Bible(htmlReader)
       }
     }
   }
 
-  /**
-   * Добавить следующий по порядку стих. В случае нарушения порядка, произойдет исключение.
-   */
-  private fun add(verse: Verse) {
-    val book = verse.book
-    val chapter = verse.chapter.toInt()
-    val number = verse.number.toInt()
-    val text = verse.text
-    val bookChapters = booksToChapters.computeIfAbsent(book) { mutableListOf() }
-    if (number == 1) {
-      // если это первый стих, значит предыдущих глав должно быть на одну меньше
-      check(bookChapters.size == chapter - 1)
-      bookChapters.add(mutableListOf(text))
-    } else {
-      // если это не первый стих, значит глава уже должна быть в списке
-      check(bookChapters.size == chapter)
-      val lastChapter = bookChapters[chapter - 1]
-      // и при этом предыдущих стихов в ней должно быть на один меньше
-      check(lastChapter.size == number - 1)
-      lastChapter.add(text)
+  private val booksToChapters = mutableMapOf<String, MutableList<MutableList<String>>>()
+
+  init {
+    while (reader.hasNext) {
+      val verse = reader.nextVerse()
+      val book = verse.book
+      val chapter = verse.chapter.toInt()
+      val number = verse.number.toInt()
+      val text = verse.text
+      val bookChapters = booksToChapters.computeIfAbsent(book) { mutableListOf() }
+      if (number == 1) {
+        // если это первый стих, значит предыдущих глав должно быть на одну меньше
+        bookChapters.add(mutableListOf(text))
+      } else {
+        // если это не первый стих, значит глава уже должна быть в списке
+        // и при этом предыдущих стихов в ней должно быть на один меньше
+        bookChapters[chapter - 1].add(text)
+      }
     }
   }
 

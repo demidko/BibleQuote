@@ -1,4 +1,4 @@
-package app.biblequote.utils
+package app.biblequote.io
 
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
@@ -7,21 +7,25 @@ import java.io.BufferedReader
 import java.io.Closeable
 
 /**
- * Класс для чтения Библии из html стих за стихом.
+ * Класс для потокового чтения Библии из html стих за стихом.
  * @param reader формат текста _должен_ быть таким:
  * ```
- *  <h3>Книга (т. е. название)</h3>
- *  <h4>Глава (т. е. число)</h4>
- *  <p><sup>Номер стиха, например 1</sup> собственно текст стиха 1
- *  <p><sup>Номер стиха, например 2</sup> собственно текст стиха 2
- *  И так далее для всех последующих глав и стихов
+ *  <h3>Книга Примеров</h3>
+ *  <h4>1</h4>
+ *  <p><sup>1</sup> собственно текст стиха 1
+ *  <p><sup>2</sup> собственно текст стиха 2
+ *  ...
+ *  ...
+ *  И так далее для всех последующих глав и стихов по порядку.
  * ```
+ * В примере выше описана книга, содержащая одну главу с двумя стихами.
  * Тег `<sup>` может быть опущен. Главное — наличие номера стиха.
  * Текст может состоять из нескольких и более книг.
  * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
  */
 class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
-  private var line = 0UL
+
+  private var line = 0uL
   private var bookName = "?"
   private var chapterNumber = 0.toUShort()
   private var verseNumber = 0.toUShort()

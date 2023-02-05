@@ -1,11 +1,11 @@
 package app.biblequote
 
-import app.biblequote.utils.Verse
+import app.biblequote.io.Verse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class Api() {
+class Api(private val abbrToBible: Map<String, Bible>) {
 
   /**
    * Список доступных переводов Библии приводится с общепринятыми английских аббревиатурами.

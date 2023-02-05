@@ -1,4 +1,4 @@
-package app.biblequote.utils
+package app.biblequote.io
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterAll
@@ -12,10 +12,9 @@ internal object HtmlBibleReaderTest {
   @JvmStatic
   @BeforeAll
   fun init(): Unit {
-    reader =
-      javaClass.getResourceAsStream("/bible/rst.html")!!
-        .bufferedReader()
-        .let(::HtmlBibleReader)
+    val markup = javaClass.getResource("/rst-markup.json")!!.let(::Markup)
+    val bufferedReader = javaClass.getResourceAsStream("/bible/rst.html")!!.bufferedReader()
+    reader = HtmlBibleReader(bufferedReader, markup)
   }
 
   @JvmStatic
