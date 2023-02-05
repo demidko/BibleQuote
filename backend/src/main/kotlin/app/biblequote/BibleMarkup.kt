@@ -1,5 +1,7 @@
-package app.biblequote.markup
+package app.biblequote
 
+import app.biblequote.utils.MarkupChecker
+import app.biblequote.utils.VerseRef
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.net.URL
@@ -26,12 +28,12 @@ class BibleMarkup(url: URL) {
   /**
    * Словарь ставит в соответствие названию книги список количества стихов для каждой главы.
    */
-  private val booksToChaptersVerses = mutableMapOf<String, List<UShort>>()
+  private val booksToChaptersVerses = mutableMapOf<String, List<Int>>()
 
   init {
     val json = jacksonObjectMapper().readTree(url).fields()
     for ((book, verses) in json) {
-      booksToChaptersVerses[book] = verses.map(JsonNode::asInt).map(Int::toUShort)
+      booksToChaptersVerses[book] = verses.map(JsonNode::asInt)
     }
   }
 
@@ -46,9 +48,8 @@ class BibleMarkup(url: URL) {
     return iterator {
       for ((book, chapters) in booksToChaptersVerses) {
         for ((chapterIdx, versesCount) in chapters.withIndex()) {
-          val chapterNumber = chapterIdx.plus(1).toUShort()
-          val versesNumbers = 1.toUShort().rangeTo(versesCount).map(UInt::toUShort)
-          for (verseNumber in versesNumbers) {
+          val chapterNumber = chapterIdx + 1
+          for (verseNumber in 1..versesCount) {
             yield(VerseRef(book, chapterNumber, verseNumber))
           }
         }

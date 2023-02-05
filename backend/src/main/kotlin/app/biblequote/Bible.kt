@@ -1,41 +1,67 @@
 package app.biblequote
 
-import app.biblequote.io.HtmlBibleReader
-import app.biblequote.markup.BibleMarkup
-import app.biblequote.markup.MarkupChecker
+import app.biblequote.utils.HtmlBibleReader
+import app.biblequote.utils.Verse
 import java.net.URL
 
 /**
  * Библия с произвольным доступом к тексту по общепринятой нумерации глав и стихов.
- * @param url ресурс по ссылке должен удовлетворять требованиям [HtmlBibleReader]
- * @param markup разметка для проверки
+ * @param markup разбивка стихов
+ * @param url формат текста по ссылке _должен_ быть таким:
+ * ```
+ *  <h3>Книга Примеров</h3>
+ *  <h4>1</h4>
+ *  <p><sup>1</sup> собственно текст стиха 1
+ *  <p><sup>2</sup> собственно текст стиха 2
+ *  ...
+ *  ...
+ *  И так далее для всех последующих глав и стихов по порядку.
+ * ```
+ * В примере выше описана книга, содержащая одну главу с двумя стихами.
+ * Тег `<sup>` может быть опущен. Главное — наличие номера стиха.
+ * Текст может состоять из нескольких и более книг.
+ * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
  */
-class Bible(url: URL, markup: BibleMarkup) {
+class Bible(markup: BibleMarkup, url: URL) {
 
-  companion object {
+  private val booksToChapters = mutableMapOf<String, MutableList<MutableList<String>>>()
 
-    /**
-     * @param name ресурс должен удовлетворять требованиям [HtmlBibleReader]
-     * @param markup разметка для проверки
-     */
-    fun Bible(name: String, markup: Markup): Bible {
-      val bufferedReader = Bible::class.java.getResourceAsStream(name)!!.bufferedReader()
-      val htmlReader = HtmlBibleReader(bufferedReader, markup)
-      htmlReader.use {
-        return Bible(htmlReader)
+  /**
+   * @param markup разбивка стихов
+   * @param resource формат текста ресурса _должен_ быть таким:
+   * ```
+   *  <h3>Книга Примеров</h3>
+   *  <h4>1</h4>
+   *  <p><sup>1</sup> собственно текст стиха 1
+   *  <p><sup>2</sup> собственно текст стиха 2
+   *  ...
+   *  ...
+   *  И так далее для всех последующих глав и стихов по порядку.
+   * ```
+   * В примере выше описана книга, содержащая одну главу с двумя стихами.
+   * Тег `<sup>` может быть опущен. Главное — наличие номера стиха.
+   * Текст может состоять из нескольких и более книг.
+   * Главы и стихи в книгах следуют друг за другом в порядке возрастания.
+   */
+  constructor(markup: BibleMarkup, resource: String) : this(
+    markup,
+    Bible::class.java.getResource(resource)!!
+  )
+
+  init {
+    val checker = markup.checker()
+    val reader = url.openStream().bufferedReader().let(::HtmlBibleReader)
+    reader.use {
+      while (reader.hasNext) {
+        val verse = reader.nextVerse()
+        checker.checkNext(verse)
+        cache(verse)
       }
     }
   }
 
-  private val booksToChapters = mutableMapOf<String, MutableList<MutableList<String>>>()
-
-  init {
-    while (reader.hasNext) {
-      val verse = reader.nextVerse()
-      val book = verse.book
-      val chapter = verse.chapter.toInt()
-      val number = verse.number.toInt()
-      val text = verse.text
+  private fun cache(verse: Verse) {
+    verse.apply {
       val bookChapters = booksToChapters.computeIfAbsent(book) { mutableListOf() }
       if (number == 1) {
         // если это первый стих, значит предыдущих глав должно быть на одну меньше

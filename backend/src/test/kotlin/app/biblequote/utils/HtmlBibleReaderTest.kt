@@ -1,4 +1,4 @@
-package app.biblequote.io
+package app.biblequote.utils
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterAll
@@ -12,9 +12,7 @@ internal object HtmlBibleReaderTest {
   @JvmStatic
   @BeforeAll
   fun init(): Unit {
-    val markup = javaClass.getResource("/rst-markup.json")!!.let(::Markup)
-    val bufferedReader = javaClass.getResourceAsStream("/bible/rst.html")!!.bufferedReader()
-    reader = HtmlBibleReader(bufferedReader, markup)
+    reader = javaClass.getResourceAsStream("/bible/rst.html")!!.bufferedReader().let(::HtmlBibleReader)
   }
 
   @JvmStatic
@@ -30,8 +28,8 @@ internal object HtmlBibleReaderTest {
     assertThat(firstVerse).isEqualTo(
       Verse(
         "Бытие",
-        1u,
-        1u,
+        1,
+        1,
         "В начале сотворил Бог небо и землю."
       )
     )
@@ -42,8 +40,8 @@ internal object HtmlBibleReaderTest {
     assertThat(lastVerse).isEqualTo(
       Verse(
         "Откровение",
-        22u,
-        21u,
+        22,
+        21,
         "Благодать Господа нашего Иисуса Христа со всеми вами. Аминь."
       )
     )

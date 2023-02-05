@@ -1,6 +1,4 @@
-package app.biblequote.markup
-
-import app.biblequote.io.Verse
+package app.biblequote.utils
 
 /**
  * Сущность для проверки потокового чтения из Библии

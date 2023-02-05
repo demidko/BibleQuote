@@ -1,12 +1,12 @@
-package app.biblequote.io
+package app.biblequote.utils
 
 /**
  * Один стих из Библии. Нумерация числовых свойств в этом объекте начинается с `1`
  */
 data class Verse(
   val book: String,
-  val chapter: UShort,
-  val number: UShort,
+  val chapter: Int,
+  val number: Int,
   val text: String
 ) {
 

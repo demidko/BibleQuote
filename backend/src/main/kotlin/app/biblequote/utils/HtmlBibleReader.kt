@@ -1,4 +1,4 @@
-package app.biblequote.io
+package app.biblequote.utils
 
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
@@ -27,8 +27,8 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private var line = 0uL
   private var bookName = "?"
-  private var chapterNumber = 0.toUShort()
-  private var verseNumber = 0.toUShort()
+  private var chapterNumber = 0
+  private var verseNumber = 0
   private var currentBuffer = null as Document?
   private var currentBody = null as Element?
 
@@ -57,7 +57,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
   private val isNewBook get() = isCurrentTag("h3")
 
   private fun loadNewBook(): Verse {
-    chapterNumber = 0u
+    chapterNumber = 0
     bookName = currentText()
     reloadBuffer()
     return loadNewChapter()
@@ -69,7 +69,7 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun loadNewChapter(): Verse {
     ++chapterNumber
-    verseNumber = 0u
+    verseNumber = 0
     val text = currentText()
     check(chapterNumber.toString() == text) {
       "Номер главы $chapterNumber не найден на линии $line: $text"
