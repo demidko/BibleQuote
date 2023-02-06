@@ -47,7 +47,7 @@ class App {
    */
   @Bean
   fun rstMarkup(): Markup {
-    return javaClass.getResource("rst-all-markup.json").let(::Markup)
+    return javaClass.getResource("/rst-markup.json").let(::Markup)
   }
 
   /**
@@ -57,7 +57,7 @@ class App {
    */
   @Bean
   fun rstNewTestamentMarkup(): Markup {
-    return javaClass.getResource("rst-new-testament-markup.json").let(::Markup)
+    return javaClass.getResource("/rst-new-testament-markup.json").let(::Markup)
   }
 
   /**
