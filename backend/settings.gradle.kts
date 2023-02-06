@@ -5,4 +5,4 @@ pluginManagement {
     gradlePluginPortal()
   }
 }
-rootProject.name = rootProject.projectDir.name
+rootProject.name = rootProject.projectDir.parentFile.name
