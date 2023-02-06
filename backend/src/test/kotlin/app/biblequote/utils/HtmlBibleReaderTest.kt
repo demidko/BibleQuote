@@ -1,30 +1,34 @@
 package app.biblequote.utils
 
+import app.biblequote.dto.Verse
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
-internal object HtmlBibleReaderTest {
+object HtmlBibleReaderTest {
 
-  private lateinit var reader: HtmlBibleReader
+  private lateinit var rst: HtmlBibleReader
 
   @JvmStatic
   @BeforeAll
-  fun init(): Unit {
-    reader = javaClass.getResourceAsStream("/bible/rst.html")!!.bufferedReader().let(::HtmlBibleReader)
+  fun init() {
+    rst =
+      javaClass.getResourceAsStream("/bible/rst.html")!!
+        .bufferedReader()
+        .let(::HtmlBibleReader)
   }
 
   @JvmStatic
   @AfterAll
-  fun close(): Unit {
-    reader.close()
+  fun close() {
+    rst.close()
   }
 
   @Test
-  fun allBooksShouldBeCorrectlyLoaded() {
-    assertThat(reader.hasNext).isTrue()
-    val firstVerse = reader.nextVerse()
+  fun rstShouldBeCorrectlyLoaded() {
+    assertThat(rst.hasNext).isTrue()
+    val firstVerse = rst.nextVerse()
     assertThat(firstVerse).isEqualTo(
       Verse(
         "Бытие",
@@ -34,8 +38,8 @@ internal object HtmlBibleReaderTest {
       )
     )
     lateinit var lastVerse: Verse
-    while (reader.hasNext) {
-      lastVerse = reader.nextVerse()
+    while (rst.hasNext) {
+      lastVerse = rst.nextVerse()
     }
     assertThat(lastVerse).isEqualTo(
       Verse(

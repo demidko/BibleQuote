@@ -1,15 +1,16 @@
 package app.biblequote
 
+import app.biblequote.dto.VerseRef
 import app.biblequote.utils.MarkupChecker
-import app.biblequote.utils.VerseRef
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import java.net.URL
 
 /**
- * Объект для проверки перевода на соответствие указанной разбивке.
+ * Сущность для проверки перевода на соответствие указанной разбивке.
  * Проверяются названия книг, количество глав и стихов. Содержимое стихов не проверяется.
- * Это нужно для удобства последующей лемматизации (чтобы было легче соотнести одни участки текста с аналогичными в других переводах).
+ * Это нужно для удобства последующей лемматизации
+ * (чтобы было легче соотнести одни участки текста с аналогичными в других переводах).
  * Индексация, как и везде в Библии, начинается с единицы.
  * @param url путь к файлу с json-разметкой. Пример формата файла:
  *
@@ -23,7 +24,7 @@ import java.net.URL
  * где первая содержит три главы (по 10, 4 и 6 стихов соответственно),
  * а вторая две главы (по 7 и 8 стихов соответственно).
  */
-class BibleMarkup(url: URL) {
+class Markup(url: URL) : Iterable<VerseRef> {
 
   /**
    * Словарь ставит в соответствие названию книги список количества стихов для каждой главы.
@@ -38,13 +39,13 @@ class BibleMarkup(url: URL) {
   }
 
   /**
-   * @return одноразовая сущность для потоковой проверки разметки
+   * @return одноразовая сущность для итерируемой проверки разметки стихов
    */
   fun checker(): MarkupChecker {
     return MarkupChecker(iterator())
   }
 
-  private fun iterator(): Iterator<VerseRef> {
+  override fun iterator(): Iterator<VerseRef> {
     return iterator {
       for ((book, chapters) in booksToChaptersVerses) {
         for ((chapterIdx, versesCount) in chapters.withIndex()) {

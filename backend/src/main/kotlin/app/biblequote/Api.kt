@@ -1,50 +1,60 @@
 package app.biblequote
 
-import app.biblequote.utils.Verse
+import app.biblequote.dto.Verse
+import app.biblequote.exceptions.UnknownReferenceException
+import org.slf4j.LoggerFactory.getLogger
+import org.springframework.http.HttpStatus.NOT_FOUND
+import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.status
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class Api(private val abbrToBible: Map<String, Bible>) {
+class Api(private val resolver: AbbrsResolver) {
+
+  private val log = getLogger(javaClass)
 
   /**
-   * Список доступных переводов Библии приводится с общепринятыми английских аббревиатурами.
-   * Первый в этом списке перевод, является переводом по умолчанию.
-   */
-  @GetMapping("/api/translations")
-  fun translations(): List<String> {
-    TODO()
-  }
-
-  /**
-   * Список доступных книг для выбранного перевода
+   * Список доступных книг
+   * @param abbr аббревиатура перевода Библии
    */
   @GetMapping("/api/books")
-  fun books(translation: String): List<String> {
-    TODO()
+  fun books(abbr: String): List<String> {
+    return resolver.translation(abbr).booksNames()
   }
 
   /**
-   * Список глав для выбранной книги определенного перевода
+   * Список глав для выбранной книги
+   * @param abbr аббревиатура перевода Библии
    */
   @GetMapping("/api/chapters")
-  fun chapters(translation: String, book: String): Int {
-    TODO()
+  fun chapters(abbr: String, book: String): Int {
+    return resolver.translation(abbr).chaptersCount(book)
   }
 
   /**
-   * Список стихов для выбранной главы определенной книги и перевода
+   * Количество стихов для выбранной главы определенной книги
+   * @param abbr аббревиатура перевода Библии
    */
   @GetMapping("/api/verses")
-  fun verses(translation: String, book: String, chapter: Int): List<String> {
-    TODO()
+  fun verses(abbr: String, book: String, chapter: Int): Int {
+    return resolver.translation(abbr).versesCount(book, chapter)
   }
 
   /**
-   * Поиск по выбранному переводу
+   * Поиск по Библии (благодаря синхронной лемматизации,
+   * все найденные ссылки должны быть применимы к любому переводу)
+   * @param q запрос в произвольном виде
    */
   @GetMapping("/api/search")
-  fun search(translation: String, query: String): List<Verse> {
+  fun search(q: String): List<Verse> {
     TODO()
+  }
+
+  @ExceptionHandler(UnknownReferenceException::class)
+  fun handle(e: UnknownReferenceException): ResponseEntity<String> {
+    log.warn(e.message, e)
+    return status(NOT_FOUND).body(e.message)
   }
 }

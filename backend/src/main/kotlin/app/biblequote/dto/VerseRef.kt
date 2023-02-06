@@ -1,4 +1,4 @@
-package app.biblequote.utils
+package app.biblequote.dto
 
 /**
  * Ссылка на один стих из Библии. Нумерация числовых свойств в этом объекте начинается с `1`

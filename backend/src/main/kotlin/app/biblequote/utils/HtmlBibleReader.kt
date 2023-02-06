@@ -1,5 +1,6 @@
 package app.biblequote.utils
 
+import app.biblequote.dto.Verse
 import org.jsoup.Jsoup.parse
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element

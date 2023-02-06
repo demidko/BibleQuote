@@ -1,5 +1,8 @@
 package app.biblequote.utils
 
+import app.biblequote.dto.Verse
+import app.biblequote.dto.VerseRef
+
 /**
  * Сущность для проверки потокового чтения из Библии
  * @param ref последовательные ссылки на стихи в указанном разметкой порядке
@@ -17,7 +20,7 @@ class MarkupChecker(private val ref: Iterator<VerseRef>) {
     val actualRef = VerseRef(verse.book, verse.chapter, verse.number)
     require(actualRef == expectedRef) {
       """
-        Ожидался номер стиха $expectedRef, но вместо него идёт стих:
+        Ожидался стих $expectedRef, но вместо него идёт:
           $verse
       """.trimIndent()
     }
