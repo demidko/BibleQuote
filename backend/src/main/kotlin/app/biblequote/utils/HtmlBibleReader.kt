@@ -53,7 +53,8 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
 
   private fun currentText() = currentBuffer!!.text()
 
-  private fun isCurrentTag(tag: String) = currentBody!!.firstElementChild()!!.tagName() == tag
+  private fun isCurrentTag(tag: String) =
+    currentBody!!.firstElementChild()!!.tagName() == tag
 
   private val isNewBook get() = isCurrentTag("h3")
 
@@ -96,11 +97,21 @@ class HtmlBibleReader(private val reader: BufferedReader) : Closeable {
     return Verse(bookName, chapterNumber, verseNumber, pureText)
   }
 
-  fun nextVerse() = when {
-    isNewBook -> loadNewBook()
-    isNewChapter -> loadNewChapter()
-    isNewVerse -> loadNewVerse()
-    else -> error("Не распознан html на линии $line")
+  fun nextVerse(): Verse {
+    return try {
+      when {
+        isNewBook -> loadNewBook()
+        isNewChapter -> loadNewChapter()
+        isNewVerse -> loadNewVerse()
+        else -> illegalState()
+      }
+    } catch (e: NullPointerException) {
+      illegalState()
+    }
+  }
+
+  private fun illegalState(): Nothing {
+    error("Не распознан html на линии $line")
   }
 
   override fun close() {

@@ -121,7 +121,7 @@ class App {
    */
   @Bean
   fun kassianNewTestamentTranslation(): Bible {
-    return Bible(rstMarkup(), "/bible/knt.html")
+    return Bible(rstNewTestamentMarkup(), "/bible/knt.html")
   }
 
 
