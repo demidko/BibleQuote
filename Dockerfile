@@ -14,7 +14,7 @@ COPY backend/settings.gradle.kts ./settings.gradle.kts
 COPY --from=frontend /project/dist ./src/main/resources/public
 RUN gradle clean build
 
-FROM openjdk:21-bullseye as app
+FROM eclipse-temurin as app
 WORKDIR /root
 COPY --from=backend /project/build/libs/*-boot.jar ./app
 ENTRYPOINT ["java", "-jar", "--enable-preview", "/root/app"]
